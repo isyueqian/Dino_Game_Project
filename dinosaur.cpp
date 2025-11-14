@@ -19,6 +19,7 @@ dinosaur::dinosaur(QWidget *parent) : QWidget(parent) {
 void dinosaur::reset() {
     dino = QRect(40, groundY - 40, 36, 40); // x,y,w,h
     vy = 0; onGround = true;
+    isCrouching = false;
     obstacles.clear();
     speed = 180.f;
     score = 0;
@@ -59,6 +60,13 @@ void dinosaur::updatePhysics(float dt) {
             vy = 0.f;
             onGround = true;
         }
+    }
+
+    if (onGround && isCrouching) {
+        // Apply crouching state
+        int oldBottom = dino.bottom();
+        dino.setHeight(20);  
+        dino.moveBottom(oldBottom); 
     }
 
     // create obstacles
@@ -132,6 +140,9 @@ void dinosaur::keyPressEvent(QKeyEvent *e) {
             vy = jumpV;
         }
     } else if (e->key() == Qt::Key_Down || e->key() == Qt::Key_S) {
+        if (!gameOver && !isCrouching) {
+            isCrouching = true;
+        }
         // accelerate falling to ground
         if (!onGround) vy += 300.f;
     } else if (e->key() == Qt::Key_R) {
@@ -140,4 +151,17 @@ void dinosaur::keyPressEvent(QKeyEvent *e) {
         close();
     }
     QWidget::keyPressEvent(e);
+}
+
+void dinosaur::keyReleaseEvent(QKeyEvent *e) {
+    if (e->key() == Qt::Key_Down || e->key() == Qt::Key_S) {
+        if (isCrouching) {
+            isCrouching = false;
+            // Return to normal height
+            int oldBottom = dino.bottom();
+            dino.setHeight(40);  
+            dino.moveBottom(oldBottom); 
+        }
+    }
+    QWidget::keyReleaseEvent(e);
 }

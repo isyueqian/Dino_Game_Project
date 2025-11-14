@@ -13,6 +13,7 @@ public:
 protected:
     void paintEvent(QPaintEvent*) override;
     void keyPressEvent(QKeyEvent*) override;
+    void keyReleaseEvent(QKeyEvent *e) override;
 
 private slots:
     void tick();
@@ -26,6 +27,7 @@ private:
     QRect dino;
     float vy = 0.f;
     bool onGround = true;
+    bool isCrouching = false;
     int groundY = 180;
     QVector<QRect> obstacles;
     float speed = 180.f;
