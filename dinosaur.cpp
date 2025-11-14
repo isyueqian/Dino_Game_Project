@@ -8,6 +8,14 @@ dinosaur::dinosaur(QWidget *parent) : QWidget(parent) {
     setWindowTitle("Dinosaur Game (Qt Widget)");
     setFixedSize(640, 240);
 
+    // Load sprites from resources
+    dinoStandSprite.load(":/images/images/Right_Run.png");
+    dinoCrouchSprite.load(":/images/images/Right_Duck.png");
+    
+    // Scale sprites to match game dimensions
+    dinoStandSprite = dinoStandSprite.scaled(36, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    dinoCrouchSprite = dinoCrouchSprite.scaled(36, 20, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
     reset();
 
     frame.setTimerType(Qt::PreciseTimer);
@@ -20,6 +28,7 @@ void dinosaur::reset() {
     dino = QRect(40, groundY - 40, 36, 40); // x,y,w,h
     vy = 0; onGround = true;
     isCrouching = false;
+    currentState = RUN;
     obstacles.clear();
     speed = 180.f;
     score = 0;
@@ -35,6 +44,14 @@ void dinosaur::spawnObstacle() {
     int x = width() + QRandomGenerator::global()->bounded(0, 40);
     int y = groundY - h;
     obstacles.push_back(QRect(x, y, w, h));
+}
+
+void dinosaur::updateDinoState() {
+    if (onGround && isCrouching) {
+        currentState = DUCK;
+    } else {
+        currentState = RUN;
+    }
 }
 
 void dinosaur::updatePhysics(float dt) {
@@ -68,6 +85,7 @@ void dinosaur::updatePhysics(float dt) {
         dino.setHeight(20);  
         dino.moveBottom(oldBottom); 
     }
+    updateDinoState();
 
     // create obstacles
     spawnTimer -= dt;
@@ -106,17 +124,19 @@ void dinosaur::paintEvent(QPaintEvent*) {
     p.drawLine(0, groundY + 1, width(), groundY + 1);
 
     // dinosaur
-    p.setBrush(Qt::black);
-    p.setPen(Qt::NoPen);
-    // body
-    p.drawRect(dino);
-    // eye
-    p.setBrush(Qt::white);
-    p.drawRect(dino.x() + dino.width() - 10, dino.y() + 8, 4, 4);
+    switch (currentState) {
+        case DUCK:
+            p.drawPixmap(dino.topLeft(), dinoCrouchSprite);
+            break;
+        case RUN:
+        default:
+            p.drawPixmap(dino.topLeft(), dinoStandSprite);
+            break;
+    }
 
     // cactus
     p.setBrush(Qt::black);
-    for (const auto &r : qAsConst(obstacles)) {
+    for (const auto &r : std::as_const(obstacles)) {
         p.drawRect(r);
         p.drawRect(r.x()-4, r.y()+r.height()/3, 4, r.height()/3);
         p.drawRect(r.right(), r.y()+r.height()/2-6, 4, r.height()/3);
