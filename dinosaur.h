@@ -19,15 +19,24 @@ private slots:
     void tick();
 
 private:
+
+    enum DinoState {
+        RUN,
+        DUCK
+    };
+
     void reset();
     void spawnObstacle();
+    void updateDinoState();
     void updatePhysics(float dt);
     bool checkCollision() const;
+    
 
     QRect dino;
     float vy = 0.f;
     bool onGround = true;
     bool isCrouching = false;
+    DinoState currentState = RUN;
     int groundY = 180;
     QVector<QRect> obstacles;
     float speed = 180.f;
@@ -40,4 +49,7 @@ private:
     int score = 0;
     QTimer frame;
     QElapsedTimer clock;
+
+    QPixmap dinoStandSprite;
+    QPixmap dinoCrouchSprite;
 };
