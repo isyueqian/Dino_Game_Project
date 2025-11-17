@@ -2,5 +2,9 @@
     <qresource prefix="/images">
         <file>images/Right_Run.png</file>
         <file>images/Right_Duck.png</file>
+        <file>images/Right_Duck_1.png</file>
+        <file>images/Right_Duck_2.png</file>
+        <file>images/Right_Run_1.png</file>
+        <file>images/Right_Run_2.png</file>
     </qresource>
 </RCC>

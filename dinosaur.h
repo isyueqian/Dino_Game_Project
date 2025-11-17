@@ -1,9 +1,13 @@
-#pragma once
+#ifndef DINOSAUR_H
+#define DINOSAUR_H
+
 #include <QWidget>
 #include <QTimer>
 #include <QVector>
 #include <QRect>
 #include <QElapsedTimer>
+#include <QPixmap>
+#include <QSoundEffect>
 
 class dinosaur : public QWidget {
     Q_OBJECT
@@ -26,30 +30,65 @@ private:
     };
 
     void reset();
-    void spawnObstacle();
+    void spawnCactus();
+    void spawnBird();
     void updateDinoState();
     void updatePhysics(float dt);
     bool checkCollision() const;
-    
+    void updateAnimation(float dt);
 
+    // dinosaur
     QRect dino;
     float vy = 0.f;
     bool onGround = true;
     bool isCrouching = false;
     DinoState currentState = RUN;
-    int groundY = 180;
-    QVector<QRect> obstacles;
-    float speed = 180.f;
-    float gravity = 900.f;
-    float jumpV = -380.f;
-    float spawnMin = 1.2f, spawnMax = 2.2f;
-    float spawnTimer = 0.f;
-
     bool gameOver = false;
-    int score = 0;
+    bool started = false;
+
+    // sprites
+    QPixmap dinoStandSprite;
+    QPixmap dinoCrouchSprite;
+    QVector<QPixmap> runFrames;
+    QVector<QPixmap> duckFrames;
+    int currentRunFrame = 0;
+    int currentDuckFrame = 0;
+    float animTimer = 0.f;
+    float animFrameDuration = 0.08f;
+
+    // obstacles
+    QVector<QRect> cactus;
+    QVector<QRect> birds;
+
+    // timers
     QTimer frame;
     QElapsedTimer clock;
 
-    QPixmap dinoStandSprite;
-    QPixmap dinoCrouchSprite;
+    // game parameters
+    float speed = 180.f;
+    const float baseSpeed = 180.f;
+    const float maxSpeed = 420.f;
+    int score = 0;
+    float spawnTimer = 0.f;
+    float spawnMin = 1.0f;
+    float spawnMax = 1.8f;
+
+    // physics constants
+    const int groundY = 200;
+    const float gravity = 2400.f;
+    const float jumpV = -700.f;
+
+    // day / night cycle
+    float dayNightTimer = 0.f;
+    float dayNightPeriod = 15.f; // every 15 seconds
+    bool isNight = false;
+
+    // ground pattern
+    float groundOffset = 0.f;
+    float groundPatternSpacing = 20.f;
+
+    // audio
+    // QSoundEffect sJump;
 };
+
+#endif // DINOSAUR_H
