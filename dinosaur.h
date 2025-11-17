@@ -1,36 +1,29 @@
 #ifndef DINOSAUR_H
 #define DINOSAUR_H
 
-#include <QWidget>
-#include <QTimer>
-#include <QVector>
-#include <QRect>
 #include <QElapsedTimer>
 #include <QPixmap>
+#include <QRect>
 #include <QSoundEffect>
+#include <QTimer>
+#include <QVector>
+#include <QWidget>
 
 class dinosaur : public QWidget {
     Q_OBJECT
-public:
-    explicit dinosaur(QWidget *parent=nullptr);
+   public:
+    explicit dinosaur(QWidget* parent = nullptr);
 
-protected:
+   protected:
     void paintEvent(QPaintEvent*) override;
     void keyPressEvent(QKeyEvent*) override;
-    void keyReleaseEvent(QKeyEvent *e) override;
+    void keyReleaseEvent(QKeyEvent* e) override;
 
-private slots:
+   private slots:
     void tick();
 
-private:
-
-    enum DinoState {
-        RUN,
-        DUCK,
-        START,
-        JUMP,
-        DEAD
-    };
+   private:
+    enum DinoState { RUN, DUCK, START, JUMP, DEAD };
 
     void reset();
     void spawnCactus();
@@ -95,7 +88,7 @@ private:
 
     // day / night cycle
     float dayNightTimer = 0.f;
-    float dayNightPeriod = 15.f; // every 15 seconds
+    float dayNightPeriod = 15.f;  // every 15 seconds
     bool isNight = false;
 
     // ground pattern
@@ -106,4 +99,4 @@ private:
     // QSoundEffect sJump;
 };
 
-#endif // DINOSAUR_H
+#endif  // DINOSAUR_H

@@ -1,11 +1,11 @@
 #include "dinosaur.h"
-#include <QPainter>
+#include <QDebug>
 #include <QKeyEvent>
+#include <QPainter>
 #include <QRandomGenerator>
 #include <cmath>
-#include <QDebug>
 
-dinosaur::dinosaur(QWidget *parent) : QWidget(parent) {
+dinosaur::dinosaur(QWidget* parent) : QWidget(parent) {
     setWindowTitle("Dinosaur Game (Qt Widget)");
     setFixedSize(640, 240);
 
@@ -24,23 +24,15 @@ dinosaur::dinosaur(QWidget *parent) : QWidget(parent) {
     dinoStandSprite = dinoStandSprite.scaled(36, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     dinoCrouchSprite = dinoCrouchSprite.scaled(72, 30, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     dinoStartSprite = dinoStartSprite.scaled(36, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    dinoJumpSprite  = dinoJumpSprite.scaled(36, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    dinoDeadSprite  = dinoDeadSprite.scaled(36, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    dinoJumpSprite = dinoJumpSprite.scaled(36, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    dinoDeadSprite = dinoDeadSprite.scaled(36, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     cloudSprite = cloudSprite.scaled(60, 60, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     groundSprite = groundSprite.scaledToHeight(20, Qt::SmoothTransformation);
 
-    qDebug() << "cloud loaded?" << !cloudSprite.isNull()
-             << "size=" << cloudSprite.size();
-    qDebug() << "groundSprite size =" << groundSprite.size();
-
-
     // Dinosaur animation
-    auto loadFrames = [](QVector<QPixmap> &vec,
-                         const QString &baseName,
-                         int count,
-                         const QSize &targetSize) {
+    auto loadFrames = [](QVector<QPixmap>& vec, const QString& baseName, int count, const QSize& targetSize) {
         for (int i = 0; i < count; ++i) {
-            QString path = QString(":/images/images/%1_%2.png").arg(baseName).arg(i+1);
+            QString path = QString(":/images/images/%1_%2.png").arg(baseName).arg(i + 1);
             QPixmap pm(path);
             if (!pm.isNull()) {
                 vec.push_back(pm.scaled(targetSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
@@ -48,13 +40,10 @@ dinosaur::dinosaur(QWidget *parent) : QWidget(parent) {
         }
     };
 
-    loadFrames(runFrames,  "Right_Run",  2, QSize(36, 40));
+    loadFrames(runFrames, "Right_Run", 2, QSize(36, 40));
     loadFrames(duckFrames, "Right_Duck", 2, QSize(72, 25));
 
-    qDebug() << "Size of runFrames: " << runFrames.size();
-    qDebug() << "Size of duckFrames: " << duckFrames.size();
-
-    if (runFrames.isEmpty())  runFrames.push_back(dinoStandSprite);
+    if (runFrames.isEmpty()) runFrames.push_back(dinoStandSprite);
     if (duckFrames.isEmpty()) duckFrames.push_back(dinoCrouchSprite);
 
     // Sound effect
@@ -63,12 +52,12 @@ dinosaur::dinosaur(QWidget *parent) : QWidget(parent) {
 
     frame.setTimerType(Qt::PreciseTimer);
     connect(&frame, &QTimer::timeout, this, &dinosaur::tick);
-    frame.start(16); // ~60 FPS
+    frame.start(16);  // ~60 FPS
     clock.start();
 }
 
 void dinosaur::reset() {
-    dino = QRect(40, groundY - 40, 36, 40); // x,y,w,h
+    dino = QRect(40, groundY - 40, 36, 40);  // x,y,w,h
     vy = 0;
     onGround = true;
     isCrouching = false;
@@ -123,14 +112,10 @@ void dinosaur::spawnCloud() {
     // clouds appear at random heights above the ground
     int y = QRandomGenerator::global()->bounded(20, 120);
     clouds.push_back(QRect(x, y, w, h));
-
-    qDebug() << "cloud created at x:" << x;
-
 }
 
 void dinosaur::updateDinoState() {
-    if (currentState == JUMP)
-        return;
+    if (currentState == JUMP) return;
 
     if (onGround && isCrouching) {
         currentState = DUCK;
@@ -163,15 +148,14 @@ void dinosaur::updatePhysics(float dt) {
 
     // background moves toward left
     int dx = (int)std::round(-speed * dt);
-    for (auto &r : cactus) r.translate(dx, 0);
-    for (auto &b : birds) b.translate(dx, 0);
+    for (auto& r : cactus) r.translate(dx, 0);
+    for (auto& b : birds) b.translate(dx, 0);
     // move clouds (slower than cactus)
-    for (auto &c : clouds) c.translate(dx, 0);
+    for (auto& c : clouds) c.translate(dx, 0);
 
     // ground pattern moves
     groundOffset += speed * dt * 0.3f;
-    if (groundOffset > groundPatternSpacing)
-        groundOffset = std::fmod(groundOffset, groundPatternSpacing);
+    if (groundOffset > groundPatternSpacing) groundOffset = std::fmod(groundOffset, groundPatternSpacing);
 
     // remove the background and keep score
     for (int i = cactus.size() - 1; i >= 0; --i) {
@@ -185,7 +169,7 @@ void dinosaur::updatePhysics(float dt) {
     for (int i = birds.size() - 1; i >= 0; --i) {
         if (birds[i].right() < 0) {
             birds.remove(i);
-            score += 2; // higher score
+            score += 2;  // higher score
             // increase speed
             speed = std::min(maxSpeed, speed + 6.f);
         }
@@ -217,8 +201,8 @@ void dinosaur::updatePhysics(float dt) {
     if (onGround && isCrouching) {
         // Apply crouching state
         int oldBottom = dino.bottom();
-        dino.setHeight(20);  
-        dino.moveBottom(oldBottom); 
+        dino.setHeight(20);
+        dino.moveBottom(oldBottom);
     }
 
     updateDinoState();
@@ -234,7 +218,6 @@ void dinosaur::updatePhysics(float dt) {
     // create obstacles
     spawnTimer -= dt;
     if (spawnTimer <= 0.f) {
-
         float obstacleType = QRandomGenerator::global()->bounded(1000) / 1000.f;
 
         if (obstacleType < 0.7f) {
@@ -256,17 +239,14 @@ void dinosaur::updatePhysics(float dt) {
     }
 
     groundX -= speed * dt;
-    if (groundX <= -groundSprite.width())
-        groundX += groundSprite.width();
-
-
+    if (groundX <= -groundSprite.width()) groundX += groundSprite.width();
 }
 
 bool dinosaur::checkCollision() const {
-    for (const auto &c : cactus) {
+    for (const auto& c : cactus) {
         if (dino.intersects(c)) return true;
     }
-    for (const auto &b : birds) {
+    for (const auto& b : birds) {
         if (dino.intersects(b)) return true;
     }
     return false;
@@ -298,52 +278,50 @@ void dinosaur::paintEvent(QPaintEvent*) {
     }
 
     // dinosaur
-    const QPixmap *sprite = nullptr;
+    const QPixmap* sprite = nullptr;
 
     switch (currentState) {
-    case START:
-        sprite = &dinoStartSprite;
-        break;
+        case START:
+            sprite = &dinoStartSprite;
+            break;
 
-    case JUMP:
-        sprite = &dinoJumpSprite;
-        break;
+        case JUMP:
+            sprite = &dinoJumpSprite;
+            break;
 
-    case DEAD:
-        sprite = &dinoDeadSprite;
-        break;
+        case DEAD:
+            sprite = &dinoDeadSprite;
+            break;
 
-    case DUCK:
-        if (!duckFrames.isEmpty())
-            sprite = &duckFrames[currentDuckFrame];
-        else
-            sprite = &dinoCrouchSprite;
-        break;
+        case DUCK:
+            if (!duckFrames.isEmpty())
+                sprite = &duckFrames[currentDuckFrame];
+            else
+                sprite = &dinoCrouchSprite;
+            break;
 
-    case RUN:
-    default:
-        if (!runFrames.isEmpty())
-            sprite = &runFrames[currentRunFrame];
-        else
-            sprite = &dinoStandSprite;
-        break;
+        case RUN:
+        default:
+            if (!runFrames.isEmpty())
+                sprite = &runFrames[currentRunFrame];
+            else
+                sprite = &dinoStandSprite;
+            break;
     }
 
-    if (sprite)
-        p.drawPixmap(dino.topLeft(), *sprite);
-
+    if (sprite) p.drawPixmap(dino.topLeft(), *sprite);
 
     // cactus
     p.setBrush(fg);
     p.setPen(Qt::NoPen);
-    for (const auto &r : std::as_const(cactus)) {
+    for (const auto& r : std::as_const(cactus)) {
         p.drawRect(r);
-        p.drawRect(r.x()-4, r.y()+r.height()/3, 4, r.height()/3);
-        p.drawRect(r.right(), r.y()+r.height()/2-6, 4, r.height()/3);
+        p.drawRect(r.x() - 4, r.y() + r.height() / 3, 4, r.height() / 3);
+        p.drawRect(r.right(), r.y() + r.height() / 2 - 6, 4, r.height() / 3);
     }
 
     // birds
-    for (const auto &b : std::as_const(birds)) {
+    for (const auto& b : std::as_const(birds)) {
         QRect body = b;
         body.adjust(2, 4, -2, -2);
         p.drawEllipse(body);
@@ -353,7 +331,7 @@ void dinosaur::paintEvent(QPaintEvent*) {
     }
 
     // draw clouds (behind dinosaur)
-    for (const auto &c : std::as_const(clouds)) {
+    for (const auto& c : std::as_const(clouds)) {
         p.drawPixmap(c.topLeft(), cloudSprite);
     }
 
@@ -364,17 +342,14 @@ void dinosaur::paintEvent(QPaintEvent*) {
 
     // UI
     if (!started && !gameOver) {
-        p.drawText(width()/2 - 120, height()/2 - 10,
-                   QStringLiteral("Press SPACE / UP / W to start"));
-        p.drawText(width()/2 - 80, height()/2 + 15,
-                   QStringLiteral("DOWN / S to duck"));
+        p.drawText(width() / 2 - 120, height() / 2 - 10, QStringLiteral("Press SPACE / UP / W to start"));
+        p.drawText(width() / 2 - 80, height() / 2 + 15, QStringLiteral("DOWN / S to duck"));
     } else if (gameOver) {
-        p.drawText(width()/2 - 100, height()/2,
-                   QStringLiteral("GAME OVER - Press R to restart"));
+        p.drawText(width() / 2 - 100, height() / 2, QStringLiteral("GAME OVER - Press R to restart"));
     }
 }
 
-void dinosaur::keyPressEvent(QKeyEvent *e) {
+void dinosaur::keyPressEvent(QKeyEvent* e) {
     if (e->isAutoRepeat()) {
         QWidget::keyPressEvent(e);
         return;
@@ -411,7 +386,7 @@ void dinosaur::keyPressEvent(QKeyEvent *e) {
     QWidget::keyPressEvent(e);
 }
 
-void dinosaur::keyReleaseEvent(QKeyEvent *e) {
+void dinosaur::keyReleaseEvent(QKeyEvent* e) {
     if (e->isAutoRepeat()) {
         QWidget::keyReleaseEvent(e);
         return;
@@ -422,8 +397,8 @@ void dinosaur::keyReleaseEvent(QKeyEvent *e) {
             isCrouching = false;
             // Return to normal height
             int oldBottom = dino.bottom();
-            dino.setHeight(40);  
-            dino.moveBottom(oldBottom); 
+            dino.setHeight(40);
+            dino.moveBottom(oldBottom);
         }
     }
     QWidget::keyReleaseEvent(e);
