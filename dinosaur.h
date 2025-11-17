@@ -26,7 +26,10 @@ private:
 
     enum DinoState {
         RUN,
-        DUCK
+        DUCK,
+        START,
+        JUMP,
+        DEAD
     };
 
     void reset();
@@ -49,6 +52,9 @@ private:
     // sprites
     QPixmap dinoStandSprite;
     QPixmap dinoCrouchSprite;
+    QPixmap dinoStartSprite;
+    QPixmap dinoJumpSprite;
+    QPixmap dinoDeadSprite;
     QVector<QPixmap> runFrames;
     QVector<QPixmap> duckFrames;
     int currentRunFrame = 0;

@@ -6,5 +6,8 @@
         <file>images/Right_Duck_2.png</file>
         <file>images/Right_Run_1.png</file>
         <file>images/Right_Run_2.png</file>
+        <file>images/Dino_Dead.png</file>
+        <file>images/Dino_Jump.png</file>
+        <file>images/Dino_Start.png</file>
     </qresource>
 </RCC>

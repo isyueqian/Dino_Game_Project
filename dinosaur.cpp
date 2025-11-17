@@ -12,10 +12,17 @@ dinosaur::dinosaur(QWidget *parent) : QWidget(parent) {
     // Load sprites from resources
     dinoStandSprite.load(":/images/images/Right_Run.png");
     dinoCrouchSprite.load(":/images/images/Right_Duck.png");
+
+    dinoStartSprite.load(":/images/images/Dino_Start.png");
+    dinoJumpSprite.load(":/images/images/Dino_Jump.png");
+    dinoDeadSprite.load(":/images/images/Dino_Dead.png");
     
     // Scale sprites to match game dimensions
     dinoStandSprite = dinoStandSprite.scaled(36, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     dinoCrouchSprite = dinoCrouchSprite.scaled(72, 30, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    dinoStartSprite = dinoStartSprite.scaled(36, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    dinoJumpSprite  = dinoJumpSprite.scaled(36, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    dinoDeadSprite  = dinoDeadSprite.scaled(36, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
     // Dinosaur animation
     auto loadFrames = [](QVector<QPixmap> &vec,
@@ -55,7 +62,7 @@ void dinosaur::reset() {
     vy = 0;
     onGround = true;
     isCrouching = false;
-    currentState = RUN;
+    currentState = RUN; // todo: change to START with better sprite
     cactus.clear();
     birds.clear();
     speed = baseSpeed;
@@ -97,6 +104,9 @@ void dinosaur::spawnBird() {
 }
 
 void dinosaur::updateDinoState() {
+    if (currentState == JUMP)
+        return;
+
     if (onGround && isCrouching) {
         currentState = DUCK;
     } else {
@@ -162,6 +172,12 @@ void dinosaur::updatePhysics(float dt) {
             dino.moveBottom(groundY);
             vy = 0.f;
             onGround = true;
+
+            if (isCrouching) {
+                currentState = DUCK;
+            } else {
+                currentState = RUN;
+            }
         }
     }
 
@@ -218,6 +234,7 @@ void dinosaur::tick() {
         updatePhysics(dt);
         if (started && checkCollision()) {
             gameOver = true;
+            currentState = DEAD;
         }
     }
     update();
@@ -239,17 +256,52 @@ void dinosaur::paintEvent(QPaintEvent*) {
     }
 
     // dinosaur
+    // const QPixmap *sprite = nullptr;
+    // if (currentState == DUCK && !duckFrames.isEmpty()) {
+    //     sprite = &duckFrames[currentDuckFrame];
+    // } else if (!runFrames.isEmpty()) {
+    //     sprite = &runFrames[currentRunFrame];
+    // } else {
+    //     // fallback
+    //     sprite = (currentState == DUCK) ? &dinoCrouchSprite : &dinoStandSprite;
+    // }
+    // if (sprite)
+    //     p.drawPixmap(dino.topLeft(), *sprite);
+    // dinosaur
     const QPixmap *sprite = nullptr;
-    if (currentState == DUCK && !duckFrames.isEmpty()) {
-        sprite = &duckFrames[currentDuckFrame];
-    } else if (!runFrames.isEmpty()) {
-        sprite = &runFrames[currentRunFrame];
-    } else {
-        // fallback
-        sprite = (currentState == DUCK) ? &dinoCrouchSprite : &dinoStandSprite;
+
+    switch (currentState) {
+    case START:
+        sprite = &dinoStartSprite;
+        break;
+
+    case JUMP:
+        sprite = &dinoJumpSprite;
+        break;
+
+    case DEAD:
+        sprite = &dinoDeadSprite;
+        break;
+
+    case DUCK:
+        if (!duckFrames.isEmpty())
+            sprite = &duckFrames[currentDuckFrame];
+        else
+            sprite = &dinoCrouchSprite;
+        break;
+
+    case RUN:
+    default:
+        if (!runFrames.isEmpty())
+            sprite = &runFrames[currentRunFrame];
+        else
+            sprite = &dinoStandSprite;
+        break;
     }
+
     if (sprite)
         p.drawPixmap(dino.topLeft(), *sprite);
+
 
     // cactus
     p.setBrush(fg);
@@ -305,6 +357,7 @@ void dinosaur::keyPressEvent(QKeyEvent *e) {
             if (onGround) {
                 onGround = false;
                 vy = jumpV;
+                currentState = JUMP;
 
                 int oldBottom = dino.bottom();
                 dino.setHeight(40);
