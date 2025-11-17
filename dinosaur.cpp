@@ -14,7 +14,7 @@ dinosaur::dinosaur(QWidget *parent) : QWidget(parent) {
     
     // Scale sprites to match game dimensions
     dinoStandSprite = dinoStandSprite.scaled(36, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    dinoCrouchSprite = dinoCrouchSprite.scaled(36, 20, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    dinoCrouchSprite = dinoCrouchSprite.scaled(72, 20, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
     reset();
 
