@@ -96,7 +96,9 @@ class dinosaur : public QWidget {
     float groundPatternSpacing = 20.f;
 
     // audio
-    // QSoundEffect sJump;
+    QSoundEffect sJump;
+    QSoundEffect sHit;
+    QSoundEffect sPoint;
 };
 
 #endif  // DINOSAUR_H

@@ -12,4 +12,9 @@
         <file>images/Cloud.png</file>
         <file>images/Ground.png</file>
     </qresource>
+    <qresource prefix="/sounds">
+        <file>sounds/hit.wav</file>
+        <file>sounds/jump.wav</file>
+        <file>sounds/point.wav</file>
+    </qresource>
 </RCC>

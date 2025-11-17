@@ -47,6 +47,12 @@ dinosaur::dinosaur(QWidget* parent) : QWidget(parent) {
     if (duckFrames.isEmpty()) duckFrames.push_back(dinoCrouchSprite);
 
     // Sound effect
+    sJump.setSource(QUrl("qrc:/sounds/sounds/jump.wav"));
+    sJump.setVolume(0.25f);
+    sHit.setSource(QUrl("qrc:/sounds/sounds/hit.wav"));
+    sHit.setVolume(0.35f);
+    sPoint.setSource(QUrl("qrc:/sounds/sounds/point.wav"));
+    sPoint.setVolume(0.20f);
 
     reset();
 
@@ -164,6 +170,9 @@ void dinosaur::updatePhysics(float dt) {
             score += 1;
             // increase speed
             speed = std::min(maxSpeed, speed + 4.f);
+            if (sPoint.isLoaded()) {
+                sPoint.play();
+            }
         }
     }
     for (int i = birds.size() - 1; i >= 0; --i) {
@@ -172,6 +181,9 @@ void dinosaur::updatePhysics(float dt) {
             score += 2;  // higher score
             // increase speed
             speed = std::min(maxSpeed, speed + 6.f);
+            if (sPoint.isLoaded()) {
+                sPoint.play();
+            }
         }
     }
     for (int i = clouds.size() - 1; i >= 0; --i) {
@@ -259,6 +271,9 @@ void dinosaur::tick() {
         if (started && checkCollision()) {
             gameOver = true;
             currentState = DEAD;
+            if (sHit.isLoaded()) {
+                sHit.play();
+            }
         }
     }
     update();
@@ -363,6 +378,9 @@ void dinosaur::keyPressEvent(QKeyEvent* e) {
             if (onGround) {
                 onGround = false;
                 vy = jumpV;
+                if (sJump.isLoaded()) {
+                    sJump.play();
+                }
                 currentState = JUMP;
 
                 int oldBottom = dino.bottom();
