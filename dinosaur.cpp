@@ -26,7 +26,7 @@ dinosaur::dinosaur(QWidget *parent) : QWidget(parent) {
     dinoStartSprite = dinoStartSprite.scaled(36, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     dinoJumpSprite  = dinoJumpSprite.scaled(36, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     dinoDeadSprite  = dinoDeadSprite.scaled(36, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    cloudSprite = cloudSprite.scaled(46, 16, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    cloudSprite = cloudSprite.scaled(60, 60, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     groundSprite = groundSprite.scaledToHeight(20, Qt::SmoothTransformation);
 
     qDebug() << "cloud loaded?" << !cloudSprite.isNull()
@@ -118,7 +118,7 @@ void dinosaur::spawnBird() {
 void dinosaur::spawnCloud() {
     int w = cloudSprite.width();
     int h = cloudSprite.height();
-    int x = width() + QRandomGenerator::global()->bounded(0, 200);
+    int x = width() + QRandomGenerator::global()->bounded(0, 50);
 
     // clouds appear at random heights above the ground
     int y = QRandomGenerator::global()->bounded(20, 120);
@@ -152,43 +152,21 @@ void dinosaur::updateAnimation(float dt) {
 }
 
 void dinosaur::updatePhysics(float dt) {
-    // if (!started) {
-    //     dayNightTimer += dt;
-    //     if (dayNightTimer >= dayNightPeriod) {
-    //         dayNightTimer = 0.f;
-    //         isNight = !isNight;
-    //     }
-    //     return;
-    // }
     if (!started) {
-
-        // 让云朵也在未开始时移动
-        for (auto &c : clouds)
-            c.translate(-(int)(speed * 0.15f * dt), 0);
-
-        // 如果没有云朵，创建一些
-        if (clouds.isEmpty()) {
-            spawnCloud();
-            spawnCloud();
-        }
-
-        // 日夜切换
         dayNightTimer += dt;
         if (dayNightTimer >= dayNightPeriod) {
             dayNightTimer = 0.f;
             isNight = !isNight;
         }
-
         return;
     }
-
 
     // background moves toward left
     int dx = (int)std::round(-speed * dt);
     for (auto &r : cactus) r.translate(dx, 0);
     for (auto &b : birds) b.translate(dx, 0);
     // move clouds (slower than cactus)
-    for (auto &c : clouds) c.translate(-(int)(speed * 0.2f * dt), 0);
+    for (auto &c : clouds) c.translate(dx, 0);
 
     // ground pattern moves
     groundOffset += speed * dt * 0.3f;
@@ -319,11 +297,6 @@ void dinosaur::paintEvent(QPaintEvent*) {
         gx += groundSprite.width();
     }
 
-    // draw clouds (behind dinosaur)
-    for (const auto &c : std::as_const(clouds)) {
-        p.drawPixmap(c.topLeft(), cloudSprite);
-    }
-
     // dinosaur
     const QPixmap *sprite = nullptr;
 
@@ -377,6 +350,11 @@ void dinosaur::paintEvent(QPaintEvent*) {
         QPoint wingCenter(body.center().x() - 6, body.center().y() - 3);
         p.drawLine(wingCenter, wingCenter + QPoint(-6, -5));
         p.drawLine(wingCenter, wingCenter + QPoint(6, -5));
+    }
+
+    // draw clouds (behind dinosaur)
+    for (const auto &c : std::as_const(clouds)) {
+        p.drawPixmap(c.topLeft(), cloudSprite);
     }
 
     // score
