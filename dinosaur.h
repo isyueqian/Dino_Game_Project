@@ -35,6 +35,7 @@ private:
     void reset();
     void spawnCactus();
     void spawnBird();
+    void spawnCloud();
     void updateDinoState();
     void updatePhysics(float dt);
     bool checkCollision() const;
@@ -61,6 +62,14 @@ private:
     int currentDuckFrame = 0;
     float animTimer = 0.f;
     float animFrameDuration = 0.08f;
+
+    // clouds
+    QVector<QRect> clouds;
+    QPixmap cloudSprite;
+
+    // ground tile sprite
+    QPixmap groundSprite;
+    float groundX = 0.f;
 
     // obstacles
     QVector<QRect> cactus;

@@ -16,13 +16,23 @@ dinosaur::dinosaur(QWidget *parent) : QWidget(parent) {
     dinoStartSprite.load(":/images/images/Dino_Start.png");
     dinoJumpSprite.load(":/images/images/Dino_Jump.png");
     dinoDeadSprite.load(":/images/images/Dino_Dead.png");
-    
+
+    cloudSprite.load(":/images/images/Cloud.png");
+    groundSprite.load(":/images/images/Ground.png");
+
     // Scale sprites to match game dimensions
     dinoStandSprite = dinoStandSprite.scaled(36, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     dinoCrouchSprite = dinoCrouchSprite.scaled(72, 30, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     dinoStartSprite = dinoStartSprite.scaled(36, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     dinoJumpSprite  = dinoJumpSprite.scaled(36, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     dinoDeadSprite  = dinoDeadSprite.scaled(36, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    cloudSprite = cloudSprite.scaled(46, 16, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    groundSprite = groundSprite.scaledToHeight(20, Qt::SmoothTransformation);
+
+    qDebug() << "cloud loaded?" << !cloudSprite.isNull()
+             << "size=" << cloudSprite.size();
+    qDebug() << "groundSprite size =" << groundSprite.size();
+
 
     // Dinosaur animation
     auto loadFrames = [](QVector<QPixmap> &vec,
@@ -62,9 +72,11 @@ void dinosaur::reset() {
     vy = 0;
     onGround = true;
     isCrouching = false;
-    currentState = RUN; // todo: change to START with better sprite
+    currentState = START;
     cactus.clear();
     birds.clear();
+    clouds.clear();
+    groundX = 0.f;
     speed = baseSpeed;
     score = 0;
     spawnTimer = 0.f;
@@ -103,6 +115,19 @@ void dinosaur::spawnBird() {
     birds.push_back(QRect(x, y, w, h));
 }
 
+void dinosaur::spawnCloud() {
+    int w = cloudSprite.width();
+    int h = cloudSprite.height();
+    int x = width() + QRandomGenerator::global()->bounded(0, 200);
+
+    // clouds appear at random heights above the ground
+    int y = QRandomGenerator::global()->bounded(20, 120);
+    clouds.push_back(QRect(x, y, w, h));
+
+    qDebug() << "cloud created at x:" << x;
+
+}
+
 void dinosaur::updateDinoState() {
     if (currentState == JUMP)
         return;
@@ -127,19 +152,43 @@ void dinosaur::updateAnimation(float dt) {
 }
 
 void dinosaur::updatePhysics(float dt) {
+    // if (!started) {
+    //     dayNightTimer += dt;
+    //     if (dayNightTimer >= dayNightPeriod) {
+    //         dayNightTimer = 0.f;
+    //         isNight = !isNight;
+    //     }
+    //     return;
+    // }
     if (!started) {
+
+        // 让云朵也在未开始时移动
+        for (auto &c : clouds)
+            c.translate(-(int)(speed * 0.15f * dt), 0);
+
+        // 如果没有云朵，创建一些
+        if (clouds.isEmpty()) {
+            spawnCloud();
+            spawnCloud();
+        }
+
+        // 日夜切换
         dayNightTimer += dt;
         if (dayNightTimer >= dayNightPeriod) {
             dayNightTimer = 0.f;
             isNight = !isNight;
         }
+
         return;
     }
+
 
     // background moves toward left
     int dx = (int)std::round(-speed * dt);
     for (auto &r : cactus) r.translate(dx, 0);
-    for (auto &b : birds)     b.translate(dx, 0);
+    for (auto &b : birds) b.translate(dx, 0);
+    // move clouds (slower than cactus)
+    for (auto &c : clouds) c.translate(-(int)(speed * 0.2f * dt), 0);
 
     // ground pattern moves
     groundOffset += speed * dt * 0.3f;
@@ -161,6 +210,11 @@ void dinosaur::updatePhysics(float dt) {
             score += 2; // higher score
             // increase speed
             speed = std::min(maxSpeed, speed + 6.f);
+        }
+    }
+    for (int i = clouds.size() - 1; i >= 0; --i) {
+        if (clouds[i].right() < 0) {
+            clouds.remove(i);
         }
     }
 
@@ -199,7 +253,7 @@ void dinosaur::updatePhysics(float dt) {
         isNight = !isNight;
     }
 
-    // create cactus
+    // create obstacles
     spawnTimer -= dt;
     if (spawnTimer <= 0.f) {
 
@@ -211,11 +265,23 @@ void dinosaur::updatePhysics(float dt) {
             spawnBird();
         }
 
+        // maybe spawn a cloud (about 20% chance)
+        float cloudChance = QRandomGenerator::global()->bounded(1000) / 1000.f;
+        if (cloudChance < 0.8f) {
+            spawnCloud();
+        }
+
         float r = QRandomGenerator::global()->bounded(1000) / 1000.f;
         float gap = spawnMin + r * (spawnMax - spawnMin);
         // slightly reduce the gap
         spawnTimer = std::max(0.7f, gap - (speed - 180.f) / 600.f);
     }
+
+    groundX -= speed * dt;
+    if (groundX <= -groundSprite.width())
+        groundX += groundSprite.width();
+
+
 }
 
 bool dinosaur::checkCollision() const {
@@ -246,27 +312,18 @@ void dinosaur::paintEvent(QPaintEvent*) {
     QColor fg = isNight ? Qt::white : Qt::black;
     p.fillRect(rect(), bg);
 
-    // ground
-    p.setPen(QPen(fg, 2));
-    p.drawLine(0, groundY + 1, width(), groundY + 1);
-    p.setPen(QPen(fg, 1));
-    for (float x = -groundPatternSpacing; x < width() + groundPatternSpacing; x += groundPatternSpacing) {
-        float px = x - std::fmod(groundOffset, groundPatternSpacing);
-        p.drawLine(QPointF(px, groundY + 3), QPointF(px + 5, groundY + 3));
+    // draw ground sprite repeating
+    float gx = groundX;
+    while (gx < width()) {
+        p.drawPixmap((int)gx, groundY - groundSprite.height() + 2, groundSprite);
+        gx += groundSprite.width();
     }
 
-    // dinosaur
-    // const QPixmap *sprite = nullptr;
-    // if (currentState == DUCK && !duckFrames.isEmpty()) {
-    //     sprite = &duckFrames[currentDuckFrame];
-    // } else if (!runFrames.isEmpty()) {
-    //     sprite = &runFrames[currentRunFrame];
-    // } else {
-    //     // fallback
-    //     sprite = (currentState == DUCK) ? &dinoCrouchSprite : &dinoStandSprite;
-    // }
-    // if (sprite)
-    //     p.drawPixmap(dino.topLeft(), *sprite);
+    // draw clouds (behind dinosaur)
+    for (const auto &c : std::as_const(clouds)) {
+        p.drawPixmap(c.topLeft(), cloudSprite);
+    }
+
     // dinosaur
     const QPixmap *sprite = nullptr;
 
@@ -346,10 +403,6 @@ void dinosaur::keyPressEvent(QKeyEvent *e) {
     }
 
     if (e->key() == Qt::Key_Space || e->key() == Qt::Key_Up || e->key() == Qt::Key_W) {
-        // if (onGround && !gameOver) {
-        //     onGround = false;
-        //     vy = jumpV;
-        // }
         if (!gameOver) {
             if (!started) {
                 started = true;
