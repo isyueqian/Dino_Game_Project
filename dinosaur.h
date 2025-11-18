@@ -13,6 +13,8 @@ class dinosaur : public QWidget {
     Q_OBJECT
    public:
     explicit dinosaur(QWidget* parent = nullptr);
+    void reset();
+    void setSkin(int skin);
 
    protected:
     void paintEvent(QPaintEvent*) override;
@@ -25,7 +27,6 @@ class dinosaur : public QWidget {
    private:
     enum DinoState { RUN, DUCK, START, JUMP, DEAD };
 
-    void reset();
     void spawnCactus();
     void spawnBird();
     void spawnCloud();

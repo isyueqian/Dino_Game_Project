@@ -1,0 +1,31 @@
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
+
+#include <QMainWindow>
+#include <QPushButton>
+#include <QStackedWidget>
+
+class dinosaur;
+
+class MainWindow : public QMainWindow {
+    Q_OBJECT
+   public:
+    MainWindow(QWidget* parent = nullptr);
+
+   private slots:
+    void startGame();
+    void openCharacterSelect();
+    void chooseNormalDino();
+    void chooseHatDino();
+    void chooseSantaDino();
+
+   private:
+    QStackedWidget* stack;
+    QWidget* menuPage;
+    QWidget* charPage;
+    dinosaur* gamePage;
+
+    int selectedSkin = 0;  // 0 = normal, 1 = yellow hat, 2 = santa hat
+};
+
+#endif  // MAINWINDOW_H

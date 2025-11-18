@@ -11,10 +11,12 @@ CONFIG += c++17
 
 SOURCES += \
     main.cpp \
-    dinosaur.cpp
+    dinosaur.cpp \
+    mainWindow.cpp
 
 HEADERS += \
-    dinosaur.h
+    dinosaur.h \
+    mainWindow.h
 
 FORMS += \
     dinosaur.ui

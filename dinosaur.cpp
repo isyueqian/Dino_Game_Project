@@ -5,46 +5,26 @@
 #include <QRandomGenerator>
 #include <cmath>
 
+void loadFrames(QVector<QPixmap>& vec, const QString& baseName, int count, const QSize& targetSize) {
+    for (int i = 0; i < count; ++i) {
+        QString path = QString(":/images/images/%1_%2.png").arg(baseName).arg(i + 1);
+        QPixmap pm(path);
+        if (!pm.isNull()) {
+            vec.push_back(pm.scaled(targetSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        }
+    }
+}
+
 dinosaur::dinosaur(QWidget* parent) : QWidget(parent) {
+    setFocusPolicy(Qt::StrongFocus);
+
     setWindowTitle("Dinosaur Game (Qt Widget)");
     setFixedSize(640, 240);
 
-    // Load sprites from resources
-    dinoStandSprite.load(":/images/images/Right_Run.png");
-    dinoCrouchSprite.load(":/images/images/Right_Duck.png");
-
-    dinoStartSprite.load(":/images/images/Dino_Start.png");
-    dinoJumpSprite.load(":/images/images/Dino_Jump.png");
-    dinoDeadSprite.load(":/images/images/Dino_Dead.png");
-
     cloudSprite.load(":/images/images/Cloud.png");
     groundSprite.load(":/images/images/Ground.png");
-
-    // Scale sprites to match game dimensions
-    dinoStandSprite = dinoStandSprite.scaled(36, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    dinoCrouchSprite = dinoCrouchSprite.scaled(72, 30, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    dinoStartSprite = dinoStartSprite.scaled(36, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    dinoJumpSprite = dinoJumpSprite.scaled(36, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    dinoDeadSprite = dinoDeadSprite.scaled(36, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     cloudSprite = cloudSprite.scaled(60, 60, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     groundSprite = groundSprite.scaledToHeight(20, Qt::SmoothTransformation);
-
-    // Dinosaur animation
-    auto loadFrames = [](QVector<QPixmap>& vec, const QString& baseName, int count, const QSize& targetSize) {
-        for (int i = 0; i < count; ++i) {
-            QString path = QString(":/images/images/%1_%2.png").arg(baseName).arg(i + 1);
-            QPixmap pm(path);
-            if (!pm.isNull()) {
-                vec.push_back(pm.scaled(targetSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-            }
-        }
-    };
-
-    loadFrames(runFrames, "Right_Run", 2, QSize(36, 40));
-    loadFrames(duckFrames, "Right_Duck", 2, QSize(72, 25));
-
-    if (runFrames.isEmpty()) runFrames.push_back(dinoStandSprite);
-    if (duckFrames.isEmpty()) duckFrames.push_back(dinoCrouchSprite);
 
     // Sound effect
     sJump.setSource(QUrl("qrc:/sounds/sounds/jump.wav"));
@@ -60,6 +40,48 @@ dinosaur::dinosaur(QWidget* parent) : QWidget(parent) {
     connect(&frame, &QTimer::timeout, this, &dinosaur::tick);
     frame.start(16);  // ~60 FPS
     clock.start();
+}
+
+void dinosaur::setSkin(int skin) {
+    if (skin == 0) {
+        // normal dino sprite
+        dinoStartSprite.load(":/images/images/Dino_Start.png");
+        dinoJumpSprite.load(":/images/images/Dino_Jump.png");
+        dinoDeadSprite.load(":/images/images/Dino_Dead.png");
+        dinoStartSprite = dinoStartSprite.scaled(36, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        dinoJumpSprite = dinoJumpSprite.scaled(36, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        dinoDeadSprite = dinoDeadSprite.scaled(36, 40, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+        // Dinosaur animation
+        loadFrames(runFrames, "Dino_Run", 2, QSize(36, 40));
+        loadFrames(duckFrames, "Dino_Duck", 2, QSize(72, 25));
+
+    } else if (skin == 1) {
+        // hat dino sprite
+        dinoStartSprite.load(":/images/images/Hat_Start.png");
+        dinoJumpSprite.load(":/images/images/Hat_Jump.png");
+        dinoDeadSprite.load(":/images/images/Hat_Dead.png");
+        dinoStartSprite = dinoStartSprite.scaled(40, 48, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        dinoJumpSprite = dinoJumpSprite.scaled(40, 48, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        dinoDeadSprite = dinoDeadSprite.scaled(40, 48, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+        // Dinosaur animation
+        loadFrames(runFrames, "Hat_Run", 2, QSize(40, 48));
+        loadFrames(duckFrames, "Hat_Duck", 2, QSize(80, 30));
+
+    } else if (skin == 2) {
+        // hat dino sprite
+        dinoStartSprite.load(":/images/images/Santa_Start.png");
+        dinoJumpSprite.load(":/images/images/Santa_Jump.png");
+        dinoDeadSprite.load(":/images/images/Santa_Dead.png");
+        dinoStartSprite = dinoStartSprite.scaled(40, 48, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        dinoJumpSprite = dinoJumpSprite.scaled(40, 48, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        dinoDeadSprite = dinoDeadSprite.scaled(40, 48, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+        // Dinosaur animation
+        loadFrames(runFrames, "Santa_Run", 2, QSize(40, 48));
+        loadFrames(duckFrames, "Santa_Duck", 2, QSize(80, 30));
+    }
 }
 
 void dinosaur::reset() {

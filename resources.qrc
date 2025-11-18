@@ -1,20 +1,32 @@
 <RCC>
-    <qresource prefix="/images">
-        <file>images/Right_Run.png</file>
-        <file>images/Right_Duck.png</file>
-        <file>images/Right_Duck_1.png</file>
-        <file>images/Right_Duck_2.png</file>
-        <file>images/Right_Run_1.png</file>
-        <file>images/Right_Run_2.png</file>
-        <file>images/Dino_Dead.png</file>
-        <file>images/Dino_Jump.png</file>
-        <file>images/Dino_Start.png</file>
-        <file>images/Cloud.png</file>
-        <file>images/Ground.png</file>
-    </qresource>
     <qresource prefix="/sounds">
         <file>sounds/hit.wav</file>
         <file>sounds/jump.wav</file>
         <file>sounds/point.wav</file>
+    </qresource>
+    <qresource prefix="/images">
+        <file>images/Cloud.png</file>
+        <file>images/Dino_Dead.png</file>
+        <file>images/Dino_Duck_1.png</file>
+        <file>images/Dino_Duck_2.png</file>
+        <file>images/Dino_Jump.png</file>
+        <file>images/Dino_Run_1.png</file>
+        <file>images/Dino_Run_2.png</file>
+        <file>images/Dino_Start.png</file>
+        <file>images/Ground.png</file>
+        <file>images/Hat_Dead.png</file>
+        <file>images/Hat_Duck_1.png</file>
+        <file>images/Hat_Duck_2.png</file>
+        <file>images/Hat_Jump.png</file>
+        <file>images/Hat_Run_1.png</file>
+        <file>images/Hat_Run_2.png</file>
+        <file>images/Hat_Start.png</file>
+        <file>images/Santa_Dead.png</file>
+        <file>images/Santa_Duck_1.png</file>
+        <file>images/Santa_Duck_2.png</file>
+        <file>images/Santa_Jump.png</file>
+        <file>images/Santa_Run_1.png</file>
+        <file>images/Santa_Run_2.png</file>
+        <file>images/Santa_Start.png</file>
     </qresource>
 </RCC>
