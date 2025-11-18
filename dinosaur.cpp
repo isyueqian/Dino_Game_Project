@@ -43,6 +43,8 @@ dinosaur::dinosaur(QWidget* parent) : QWidget(parent) {
 }
 
 void dinosaur::setSkin(int skin) {
+    runFrames.clear();
+    duckFrames.clear();
     if (skin == 0) {
         // normal dino sprite
         dinoStartSprite.load(":/images/images/Dino_Start.png");
@@ -74,13 +76,13 @@ void dinosaur::setSkin(int skin) {
         dinoStartSprite.load(":/images/images/Santa_Start.png");
         dinoJumpSprite.load(":/images/images/Santa_Jump.png");
         dinoDeadSprite.load(":/images/images/Santa_Dead.png");
-        dinoStartSprite = dinoStartSprite.scaled(40, 48, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-        dinoJumpSprite = dinoJumpSprite.scaled(40, 48, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-        dinoDeadSprite = dinoDeadSprite.scaled(40, 48, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        dinoStartSprite = dinoStartSprite.scaled(38, 44, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        dinoJumpSprite = dinoJumpSprite.scaled(38, 44, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        dinoDeadSprite = dinoDeadSprite.scaled(38, 44, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
         // Dinosaur animation
-        loadFrames(runFrames, "Santa_Run", 2, QSize(40, 48));
-        loadFrames(duckFrames, "Santa_Duck", 2, QSize(80, 30));
+        loadFrames(runFrames, "Santa_Run", 2, QSize(38, 44));
+        loadFrames(duckFrames, "Santa_Duck", 2, QSize(75, 30));
     }
 }
 
@@ -421,7 +423,7 @@ void dinosaur::keyPressEvent(QKeyEvent* e) {
     } else if (e->key() == Qt::Key_R) {
         reset();
     } else if (e->key() == Qt::Key_Escape) {
-        close();
+        emit exitToMenu();
     }
     QWidget::keyPressEvent(e);
 }

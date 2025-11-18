@@ -24,6 +24,9 @@ class dinosaur : public QWidget {
    private slots:
     void tick();
 
+   signals:
+    void exitToMenu();
+
    private:
     enum DinoState { RUN, DUCK, START, JUMP, DEAD };
 

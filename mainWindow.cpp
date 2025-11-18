@@ -6,9 +6,7 @@
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     stack = new QStackedWidget(this);
 
-    // ----------------------
-    // 1. Menu Page
-    // ----------------------
+    // * 1. Menu Page
     menuPage = new QWidget;
     QVBoxLayout* mlay = new QVBoxLayout(menuPage);
 
@@ -27,9 +25,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     connect(btnStart, &QPushButton::clicked, this, &MainWindow::startGame);
     connect(btnChar, &QPushButton::clicked, this, &MainWindow::openCharacterSelect);
 
-    // ----------------------
-    // 2. Character Select Page
-    // ----------------------
+    // * 2. Character Select Page
     charPage = new QWidget;
     QVBoxLayout* clay = new QVBoxLayout(charPage);
 
@@ -48,14 +44,13 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     connect(hatBtn, &QPushButton::clicked, this, &MainWindow::chooseHatDino);
     connect(santaBtn, &QPushButton::clicked, this, &MainWindow::chooseSantaDino);
 
-    // ----------------------
-    // 3. Game Page
-    // ----------------------
+    // * 3. Game Page
     gamePage = new dinosaur;
+    connect(gamePage, &dinosaur::exitToMenu, [this]() {
+        stack->setCurrentIndex(0);  // back to menu
+    });
 
-    // ----------------------
-    // Stack pages
-    // ----------------------
+    // * Stack pages
     stack->addWidget(menuPage);  // index 0
     stack->addWidget(charPage);  // index 1
     stack->addWidget(gamePage);  // index 2
