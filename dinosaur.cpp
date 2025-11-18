@@ -63,26 +63,26 @@ void dinosaur::setSkin(int skin) {
         dinoStartSprite.load(":/images/images/Hat_Start.png");
         dinoJumpSprite.load(":/images/images/Hat_Jump.png");
         dinoDeadSprite.load(":/images/images/Hat_Dead.png");
-        dinoStartSprite = dinoStartSprite.scaled(40, 48, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-        dinoJumpSprite = dinoJumpSprite.scaled(40, 48, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-        dinoDeadSprite = dinoDeadSprite.scaled(40, 48, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        dinoStartSprite = dinoStartSprite.scaled(38, 42, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        dinoJumpSprite = dinoJumpSprite.scaled(38, 42, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        dinoDeadSprite = dinoDeadSprite.scaled(38, 42, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
         // Dinosaur animation
-        loadFrames(runFrames, "Hat_Run", 2, QSize(40, 48));
-        loadFrames(duckFrames, "Hat_Duck", 2, QSize(80, 30));
+        loadFrames(runFrames, "Hat_Run", 2, QSize(38, 42));
+        loadFrames(duckFrames, "Hat_Duck", 2, QSize(72, 28));
 
     } else if (skin == 2) {
         // hat dino sprite
         dinoStartSprite.load(":/images/images/Santa_Start.png");
         dinoJumpSprite.load(":/images/images/Santa_Jump.png");
         dinoDeadSprite.load(":/images/images/Santa_Dead.png");
-        dinoStartSprite = dinoStartSprite.scaled(38, 44, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-        dinoJumpSprite = dinoJumpSprite.scaled(38, 44, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-        dinoDeadSprite = dinoDeadSprite.scaled(38, 44, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        dinoStartSprite = dinoStartSprite.scaled(38, 42, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        dinoJumpSprite = dinoJumpSprite.scaled(38, 42, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        dinoDeadSprite = dinoDeadSprite.scaled(38, 42, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
         // Dinosaur animation
-        loadFrames(runFrames, "Santa_Run", 2, QSize(38, 44));
-        loadFrames(duckFrames, "Santa_Duck", 2, QSize(75, 30));
+        loadFrames(runFrames, "Santa_Run", 2, QSize(38, 42));
+        loadFrames(duckFrames, "Santa_Duck", 2, QSize(72, 28));
     }
 }
 

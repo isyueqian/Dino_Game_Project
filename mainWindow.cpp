@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     btnChar->setFixedHeight(40);
 
     mlay->addStretch();
-    mlay->addWidget(new QLabel("<h1>Dino Game</h1>", this));
+    mlay->addWidget(new QLabel("<h1 style='font-family:Courier New;font-size:32px;'>Dino Game</h1>"));
     mlay->addWidget(btnStart);
     mlay->addWidget(btnChar);
     mlay->addStretch();
@@ -57,6 +57,23 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
 
     setCentralWidget(stack);
     stack->setCurrentIndex(0);  // show menu
+
+    setStyleSheet(R"(
+        QPushButton {
+            font-size: 18px;
+            padding: 8px 16px;
+            background-color: #e0e0e0;
+            border: 2px solid #333;
+            border-radius: 6px;
+        }
+        QPushButton:hover {
+            background-color: #f5f5f5;
+        }
+        QLabel {
+            font-family: 'Courier New';
+            color: #333;
+        }
+    )");
 }
 
 void MainWindow::startGame() {
