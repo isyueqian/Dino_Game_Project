@@ -181,7 +181,7 @@ void dinosaur::updatePhysics(float dt) {
     for (auto& r : cactus) r.translate(dx, 0);
     for (auto& b : birds) b.translate(dx, 0);
     // move clouds (slower than cactus)
-    for (auto& c : clouds) c.translate(dx, 0);
+    for (auto& c : clouds) c.translate(dx * 1.5, 0);
 
     // ground pattern moves
     groundOffset += speed * dt * 0.3f;
