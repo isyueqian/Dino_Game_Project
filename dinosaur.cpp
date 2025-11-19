@@ -26,6 +26,42 @@ dinosaur::dinosaur(QWidget* parent) : QWidget(parent) {
     cloudSprite = cloudSprite.scaled(60, 60, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     groundSprite = groundSprite.scaledToHeight(20, Qt::SmoothTransformation);
 
+    // Setup control buttons
+    btnReturn = new QPushButton(this);
+    btnRestart = new QPushButton(this);
+
+    QPixmap returnImg(":/images/images/Return_Home.png");
+    QPixmap scaledReturn = returnImg.scaled(48, 48, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+    QPixmap restartImg(":/images/images/Game_Over_Restart.png");
+    QPixmap scaledRestart = restartImg.scaled(48 * 5, 48 * 4, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+    btnReturn->setIcon(scaledReturn);
+    btnReturn->setIconSize(QSize(48, 48));
+    btnReturn->setFixedSize(48, 48);
+
+    btnRestart->setIcon(scaledRestart);
+    btnRestart->setIconSize(QSize(48 * 5, 48 * 4));
+    btnRestart->setFixedSize(48 * 5, 48 * 4);
+
+    btnReturn->move(10, 10);
+
+    btnRestart->move(width() / 2, height() / 2);
+    btnRestart->hide();
+
+    btnReturn->setFocusPolicy(Qt::NoFocus);
+    btnRestart->setFocusPolicy(Qt::NoFocus);
+
+    connect(btnReturn, &QPushButton::clicked, [this]() { emit exitToMenu(); });
+
+    connect(btnRestart, &QPushButton::clicked, [this]() {
+        reset();
+        btnRestart->hide();
+        setFocus();
+    });
+    btnReturn->setStyleSheet("border: none; background: transparent;");
+    btnRestart->setStyleSheet("border: none; background: transparent;");
+
     // Load bird sprites
     birdSprite1.load(":/images/images/Bird1.png");
     birdSprite2.load(":/images/images/Bird2.png");
@@ -36,7 +72,7 @@ dinosaur::dinosaur(QWidget* parent) : QWidget(parent) {
     for (int i = 1; i <= 3; ++i) {
         QPixmap largeCactus(QString(":/images/images/LargeCactus%1.png").arg(i));
         largeCactusSprites.push_back(largeCactus.scaled(60, 35, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-        
+
         QPixmap smallCactus(QString(":/images/images/SmallCactus%1.png").arg(i));
         smallCactusSprites.push_back(smallCactus.scaled(60, 25, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     }
@@ -101,6 +137,16 @@ void dinosaur::setSkin(int skin) {
     }
 }
 
+void dinosaur::resizeEvent(QResizeEvent* event) {
+    QWidget::resizeEvent(event);
+
+    btnReturn->move(10, 10);
+
+    int restartW = btnRestart->width();
+    int restartH = btnRestart->height();
+    btnRestart->move((width() - restartW) / 2, (height() - restartH) / 2 - 30);
+}
+
 void dinosaur::reset() {
     dino = QRect(40, groundY - 40, 36, 40);  // x,y,w,h
     vy = 0;
@@ -124,6 +170,7 @@ void dinosaur::reset() {
     animTimer = 0.f;
     currentRunFrame = currentDuckFrame = 0;
     currentBirdFrame = 0;
+    btnRestart->hide();
     clock.restart();
 }
 
@@ -131,7 +178,7 @@ void dinosaur::spawnCactus() {
     // Randomly choose between large and small cactus
     bool isLarge = QRandomGenerator::global()->bounded(2) == 0;
     int spriteIndex = QRandomGenerator::global()->bounded(0, 3);
-    
+
     QPixmap cactusSprite;
     if (isLarge) {
         cactusSprite = largeCactusSprites[spriteIndex];
@@ -140,7 +187,7 @@ void dinosaur::spawnCactus() {
         cactusSprite = smallCactusSprites[spriteIndex];
         cactusTypes.push_back(spriteIndex + 3);  // 3-5 for small
     }
-    
+
     int w = cactusSprite.width();
     int h = cactusSprite.height();
     int x = width() + QRandomGenerator::global()->bounded(0, 40);
@@ -194,7 +241,7 @@ void dinosaur::updateAnimation(float dt) {
     } else {
         currentDuckFrame = (currentDuckFrame + 1) % duckFrames.size();
     }
-    
+
     // Update bird animation
     currentBirdFrame = (currentBirdFrame + 1) % 2;
 }
@@ -220,7 +267,7 @@ void dinosaur::updatePhysics(float dt) {
     // update distance traveled and calculate score
     distanceTraveled += speed * dt;
     int newScore = (int)(distanceTraveled / 10.0f);
-    
+
     // play sound and increase speed when score increases by 100
     if (newScore / 100 > score / 100) {
         speed = std::min(maxSpeed, speed + 10.f);
@@ -334,6 +381,7 @@ void dinosaur::tick() {
         updatePhysics(dt);
         if (started && checkCollision()) {
             gameOver = true;
+            btnRestart->show();
             currentState = DEAD;
             if (sHit.isLoaded()) {
                 sHit.play();
@@ -382,18 +430,12 @@ void dinosaur::paintEvent(QPaintEvent*) {
             break;
 
         case DUCK:
-            if (!duckFrames.isEmpty())
-                sprite = &duckFrames[currentDuckFrame];
-            else
-                sprite = &dinoCrouchSprite;
+            sprite = &duckFrames[currentDuckFrame];
             break;
 
         case RUN:
         default:
-            if (!runFrames.isEmpty())
-                sprite = &runFrames[currentRunFrame];
-            else
-                sprite = &dinoStandSprite;
+            sprite = &runFrames[currentRunFrame];
             break;
     }
 
@@ -403,9 +445,9 @@ void dinosaur::paintEvent(QPaintEvent*) {
     for (int i = 0; i < cactus.size(); ++i) {
         const QRect& r = cactus[i];
         int type = cactusTypes[i];
-        
+
         const QPixmap& cactusSprite = (type < 3) ? largeCactusSprites[type] : smallCactusSprites[type - 3];
-        
+
         if (isNight) {
             // Convert to grayscale for night time
             QImage img = cactusSprite.toImage().convertToFormat(QImage::Format_ARGB32);
@@ -431,7 +473,7 @@ void dinosaur::paintEvent(QPaintEvent*) {
         const QPixmap& birdSprite = (currentBirdFrame == 0) ? birdSprite1 : birdSprite2;
         // Bird 2 (wings up) needs to be slightly higher to align properly
         int yOffset = (currentBirdFrame == 0) ? 0 : -7;
-        
+
         if (isNight) {
             // Convert to grayscale for night time
             QImage img = birdSprite.toImage().convertToFormat(QImage::Format_ARGB32);
@@ -453,19 +495,17 @@ void dinosaur::paintEvent(QPaintEvent*) {
     }
 
     // scores
-    QFont gameFont("Courier", 16, QFont::Bold);
+    QFont gameFont("Menlo", 16, QFont::Bold);
     p.setFont(gameFont);
     p.setPen(isNight ? Qt::white : QColor(83, 83, 83));  // Dark gray
     p.setBrush(Qt::NoBrush);
-    
+
     QFontMetrics fm(gameFont);
-    
+
     // Display high score if it exists (after first game)
     if (highScore > 0) {
         // Format: "HI 00123 00045"
-        QString scoreDisplay = QString("HI %1 %2")
-            .arg(highScore, 5, 10, QChar('0'))
-            .arg(score, 5, 10, QChar('0'));
+        QString scoreDisplay = QString("HI %1 %2").arg(highScore, 5, 10, QChar('0')).arg(score, 5, 10, QChar('0'));
         int displayWidth = fm.horizontalAdvance(scoreDisplay);
         p.drawText(width() - displayWidth - 20, 30, scoreDisplay);
     } else {
@@ -476,16 +516,15 @@ void dinosaur::paintEvent(QPaintEvent*) {
     }
 
     // UI
-    QFont uiFont("Courier", 15, QFont::Normal);
+    QFont uiFont("Menlo", 15, QFont::Normal);
     p.setFont(uiFont);
     if (!started && !gameOver) {
         p.drawText(width() / 2 - 130, height() / 2 - 12, QStringLiteral("Press SPACE / UP / W to start"));
         p.drawText(width() / 2 - 80, height() / 2 + 17, QStringLiteral("DOWN / S to duck"));
     } else if (gameOver) {
-        QFont gameOverFont("Courier", 15, QFont::Bold);
+        QFont gameOverFont("Menlo", 15, QFont::Bold);
         p.setFont(gameOverFont);
-        p.drawText(width() / 2 - 50, height() / 2, QStringLiteral("GAME OVER"));
-        p.drawText(width() / 2 - 90, height() / 2 + 18, QStringLiteral("Press R to restart"));
+        p.drawText(width() / 2 - 150, height() / 2, QStringLiteral("Click Above or Press R to restart"));
     }
 }
 

@@ -1,10 +1,10 @@
 #include "mainWindow.h"
-#include <QLabel>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QPixmap>
 #include <QEvent>
+#include <QHBoxLayout>
+#include <QLabel>
 #include <QMouseEvent>
+#include <QPixmap>
+#include <QVBoxLayout>
 #include "dinosaur.h"
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
@@ -36,7 +36,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     clay->setContentsMargins(20, 20, 20, 20);
 
     clay->addStretch(2);  // More space at top to push content higher
-    
+
     QLabel* charTitle = new QLabel("<h2>Select Your Character</h2>");
     charTitle->setAlignment(Qt::AlignCenter);
     clay->addWidget(charTitle);
@@ -51,7 +51,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
         charCard->setObjectName(QString("charCard_%1").arg(i));
         charCard->setCursor(Qt::PointingHandCursor);
         charCard->setFixedSize(100, 120);
-        
+
         QVBoxLayout* cardLayout = new QVBoxLayout(charCard);
         cardLayout->setSpacing(5);
         cardLayout->setContentsMargins(10, 10, 10, 10);
@@ -60,10 +60,10 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
         QLabel* previewLabel = new QLabel;
         previewLabel->setAlignment(Qt::AlignCenter);
         previewLabel->setFixedSize(80, 80);
-        
+
         QPixmap preview;
         QString charName;
-        
+
         if (i == 0) {
             preview.load(":/images/images/Dino_Start.png");
             charName = "Normal";
@@ -74,32 +74,35 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
             preview.load(":/images/images/Santa_Start.png");
             charName = "Santa";
         }
-        
+
         preview = preview.scaled(70, 70, Qt::KeepAspectRatio, Qt::SmoothTransformation);
         previewLabel->setPixmap(preview);
-        
+
         // Character name
         QLabel* nameLabel = new QLabel(charName);
         nameLabel->setAlignment(Qt::AlignCenter);
         nameLabel->setStyleSheet("font-weight: bold; font-size: 12px;");
-        
+
         cardLayout->addWidget(previewLabel);
         cardLayout->addWidget(nameLabel);
-        
+
         // Store card widget for styling updates
-        if (i == 0) charCard0 = charCard;
-        else if (i == 1) charCard1 = charCard;
-        else charCard2 = charCard;
-        
+        if (i == 0)
+            charCard0 = charCard;
+        else if (i == 1)
+            charCard1 = charCard;
+        else
+            charCard2 = charCard;
+
         // Make cards clickable
         charCard->installEventFilter(this);
-        
+
         charLayout->addWidget(charCard);
     }
 
     clay->addLayout(charLayout);
-    
-    // Back button 
+
+    // Back button
     QPushButton* backBtn = new QPushButton("← Back to Menu");
     backBtn->setFixedHeight(40);
     backBtn->setMaximumWidth(180);
@@ -123,10 +126,8 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
             color: #000000;
         }
     )");
-    connect(backBtn, &QPushButton::clicked, [this]() {
-        stack->setCurrentIndex(0);
-    });
-    
+    connect(backBtn, &QPushButton::clicked, [this]() { stack->setCurrentIndex(0); });
+
     clay->addStretch(4);  // More space at bottom
     clay->addWidget(backBtn, 0, Qt::AlignCenter);
 
@@ -169,7 +170,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
             border-color: #999;
         }
     )");
-    
+
     // Update initial selection styling
     updateCharacterSelection();
 }
@@ -202,19 +203,19 @@ void MainWindow::chooseSantaDino() {
 void MainWindow::updateCharacterSelection() {
     // Update all cards to show selection state
     if (charCard0) {
-        charCard0->setStyleSheet(selectedSkin == 0 ? 
-            "background-color: #d0e8ff; border: 4px solid #4a90e2; border-radius: 10px;" :
-            "background-color: #f5f5f5; border: 3px solid #ccc; border-radius: 10px;");
+        charCard0->setStyleSheet(selectedSkin == 0
+                                     ? "background-color: #d0e8ff; border: 4px solid #4a90e2; border-radius: 10px;"
+                                     : "background-color: #f5f5f5; border: 3px solid #ccc; border-radius: 10px;");
     }
     if (charCard1) {
-        charCard1->setStyleSheet(selectedSkin == 1 ? 
-            "background-color: #d0e8ff; border: 4px solid #4a90e2; border-radius: 10px;" :
-            "background-color: #f5f5f5; border: 3px solid #ccc; border-radius: 10px;");
+        charCard1->setStyleSheet(selectedSkin == 1
+                                     ? "background-color: #d0e8ff; border: 4px solid #4a90e2; border-radius: 10px;"
+                                     : "background-color: #f5f5f5; border: 3px solid #ccc; border-radius: 10px;");
     }
     if (charCard2) {
-        charCard2->setStyleSheet(selectedSkin == 2 ? 
-            "background-color: #d0e8ff; border: 4px solid #4a90e2; border-radius: 10px;" :
-            "background-color: #f5f5f5; border: 3px solid #ccc; border-radius: 10px;");
+        charCard2->setStyleSheet(selectedSkin == 2
+                                     ? "background-color: #d0e8ff; border: 4px solid #4a90e2; border-radius: 10px;"
+                                     : "background-color: #f5f5f5; border: 3px solid #ccc; border-radius: 10px;");
     }
 }
 
@@ -224,11 +225,14 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event) {
         if (widget && widget->objectName().startsWith("charCard_")) {
             // Extract character index from object name
             int charIndex = widget->objectName().back().digitValue();
-            
-            if (charIndex == 0) chooseNormalDino();
-            else if (charIndex == 1) chooseHatDino();
-            else if (charIndex == 2) chooseSantaDino();
-            
+
+            if (charIndex == 0)
+                chooseNormalDino();
+            else if (charIndex == 1)
+                chooseHatDino();
+            else if (charIndex == 2)
+                chooseSantaDino();
+
             return true;
         }
     }

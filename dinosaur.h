@@ -3,6 +3,7 @@
 
 #include <QElapsedTimer>
 #include <QPixmap>
+#include <QPushButton>
 #include <QRect>
 #include <QSoundEffect>
 #include <QTimer>
@@ -37,6 +38,11 @@ class dinosaur : public QWidget {
     void updatePhysics(float dt);
     bool checkCollision() const;
     void updateAnimation(float dt);
+    void resizeEvent(QResizeEvent* event) override;
+
+    // control buttons
+    QPushButton* btnReturn;
+    QPushButton* btnRestart;
 
     // dinosaur
     QRect dino;
@@ -48,8 +54,6 @@ class dinosaur : public QWidget {
     bool started = false;
 
     // sprites
-    QPixmap dinoStandSprite;
-    QPixmap dinoCrouchSprite;
     QPixmap dinoStartSprite;
     QPixmap dinoJumpSprite;
     QPixmap dinoDeadSprite;

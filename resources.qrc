@@ -36,5 +36,7 @@
         <file>images/SmallCactus1.png</file>
         <file>images/SmallCactus2.png</file>
         <file>images/SmallCactus3.png</file>
+        <file>images/Game_Over_Restart.png</file>
+        <file>images/Return_Home.png</file>
     </qresource>
 </RCC>
