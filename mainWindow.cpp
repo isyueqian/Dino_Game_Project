@@ -14,16 +14,16 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     menuPage = new QWidget;
     QVBoxLayout* mlay = new QVBoxLayout(menuPage);
     mlay->setSpacing(20);
-    mlay->setContentsMargins(40, 40, 40, 40);
+    mlay->setContentsMargins(40, 20, 40, 40);
 
-    mlay->addStretch(2);
+    mlay->addStretch(1);
     
     // Title
     QLabel* title = new QLabel("<h1 style='font-family:Courier New;font-size:36px;'>Dino Game</h1>");
     title->setAlignment(Qt::AlignCenter);
     mlay->addWidget(title);
     
-    mlay->addSpacing(10);
+    mlay->addSpacing(0);
     
     // Start button
     QPushButton* btnStart = new QPushButton("▶ Play");
@@ -90,7 +90,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     buttonLayout->addWidget(btnChar, 0, Qt::AlignCenter);
     
     mlay->addWidget(buttonContainer);
-    mlay->addStretch(3);
+    mlay->addStretch(2);
 
     connect(btnStart, &QPushButton::clicked, this, &MainWindow::startGame);
     connect(btnChar, &QPushButton::clicked, this, &MainWindow::openCharacterSelect);
@@ -165,7 +165,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     
     // Back button 
     QPushButton* backBtn = new QPushButton("← Back");
-    backBtn->setFixedHeight(40);
+    backBtn->setFixedHeight(35);
     backBtn->setMaximumWidth(180);
     backBtn->setStyleSheet(R"(
         QPushButton {
@@ -207,6 +207,9 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
 
     setCentralWidget(stack);
     stack->setCurrentIndex(0);  // show menu
+    
+    // Set fixed size to match game widget
+    setFixedSize(640, 240);
 
     setStyleSheet(R"(
         QWidget {
