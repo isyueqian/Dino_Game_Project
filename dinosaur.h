@@ -60,6 +60,16 @@ class dinosaur : public QWidget {
     float animTimer = 0.f;
     float animFrameDuration = 0.08f;
 
+    // bird sprites
+    QPixmap birdSprite1;
+    QPixmap birdSprite2;
+    int currentBirdFrame = 0;
+
+    // cactus sprites
+    QVector<QPixmap> largeCactusSprites;
+    QVector<QPixmap> smallCactusSprites;
+    QVector<int> cactusTypes;  // Track which sprite to use for each cactus
+
     // clouds
     QVector<QRect> clouds;
     QPixmap cloudSprite;
@@ -77,10 +87,12 @@ class dinosaur : public QWidget {
     QElapsedTimer clock;
 
     // game parameters
-    float speed = 180.f;
-    const float baseSpeed = 180.f;
+    float speed = 200.f;
+    const float baseSpeed = 200.f;
     const float maxSpeed = 420.f;
     int score = 0;
+    int highScore = 0;
+    float distanceTraveled = 0.f;
     float spawnTimer = 0.f;
     float spawnMin = 1.0f;
     float spawnMax = 1.8f;
@@ -91,9 +103,8 @@ class dinosaur : public QWidget {
     const float jumpV = -700.f;
 
     // day / night cycle
-    float dayNightTimer = 0.f;
-    float dayNightPeriod = 15.f;  // every 15 seconds
     bool isNight = false;
+    int lastColorSwitch = 0;  // last score for color switch
 
     // ground pattern
     float groundOffset = 0.f;

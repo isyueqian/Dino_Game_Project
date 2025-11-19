@@ -28,5 +28,13 @@
         <file>images/Santa_Run_1.png</file>
         <file>images/Santa_Run_2.png</file>
         <file>images/Santa_Start.png</file>
+        <file>images/Bird1.png</file>
+        <file>images/Bird2.png</file>
+        <file>images/LargeCactus1.png</file>
+        <file>images/LargeCactus2.png</file>
+        <file>images/LargeCactus3.png</file>
+        <file>images/SmallCactus1.png</file>
+        <file>images/SmallCactus2.png</file>
+        <file>images/SmallCactus3.png</file>
     </qresource>
 </RCC>
