@@ -453,7 +453,7 @@ void dinosaur::paintEvent(QPaintEvent*) {
     }
 
     // scores
-    QFont gameFont("Courier", 16, QFont::Bold);
+    QFont gameFont("Courier New", 16, QFont::Bold);
     p.setFont(gameFont);
     p.setPen(isNight ? Qt::white : QColor(83, 83, 83));  // Dark gray
     p.setBrush(Qt::NoBrush);
@@ -476,13 +476,13 @@ void dinosaur::paintEvent(QPaintEvent*) {
     }
 
     // UI
-    QFont uiFont("Courier", 15, QFont::Normal);
+    QFont uiFont("Courier New", 15, QFont::Normal);
     p.setFont(uiFont);
     if (!started && !gameOver) {
         p.drawText(width() / 2 - 130, height() / 2 - 12, QStringLiteral("Press SPACE / UP / W to start"));
         p.drawText(width() / 2 - 80, height() / 2 + 17, QStringLiteral("DOWN / S to duck"));
     } else if (gameOver) {
-        QFont gameOverFont("Courier", 15, QFont::Bold);
+        QFont gameOverFont("Courier New", 15, QFont::Bold);
         p.setFont(gameOverFont);
         p.drawText(width() / 2 - 50, height() / 2, QStringLiteral("GAME OVER"));
         p.drawText(width() / 2 - 90, height() / 2 + 18, QStringLiteral("Press R to restart"));
