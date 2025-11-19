@@ -18,12 +18,21 @@ class MainWindow : public QMainWindow {
     void chooseNormalDino();
     void chooseHatDino();
     void chooseSantaDino();
+    void updateCharacterSelection();
+
+   protected:
+    bool eventFilter(QObject* obj, QEvent* event) override;
 
    private:
     QStackedWidget* stack;
     QWidget* menuPage;
     QWidget* charPage;
     dinosaur* gamePage;
+
+    // Character selection cards
+    QWidget* charCard0 = nullptr;
+    QWidget* charCard1 = nullptr;
+    QWidget* charCard2 = nullptr;
 
     int selectedSkin = 0;  // 0 = normal, 1 = yellow hat, 2 = santa hat
 };
