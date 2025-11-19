@@ -13,18 +13,84 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     // * 1. Menu Page
     menuPage = new QWidget;
     QVBoxLayout* mlay = new QVBoxLayout(menuPage);
+    mlay->setSpacing(20);
+    mlay->setContentsMargins(40, 40, 40, 40);
 
-    QPushButton* btnStart = new QPushButton("▶ Start Game");
-    QPushButton* btnChar = new QPushButton("🦖 Character Select");
+    mlay->addStretch(2);
+    
+    // Title
+    QLabel* title = new QLabel("<h1 style='font-family:Courier New;font-size:36px;'>Dino Game</h1>");
+    title->setAlignment(Qt::AlignCenter);
+    mlay->addWidget(title);
+    
+    mlay->addSpacing(10);
+    
+    // Start button
+    QPushButton* btnStart = new QPushButton("▶ Play");
+    btnStart->setFixedHeight(50);
+    btnStart->setMaximumWidth(250);
+    btnStart->setStyleSheet(R"(
+        QPushButton {
+            background-color: #f5f5f5;
+            border: 3px solid #ccc;
+            border-radius: 10px;
+            font-family: 'Courier New';
+            font-size: 16px;
+            font-weight: bold;
+            padding: 10px 20px;
+            color: #000000;
+        }
+        QPushButton:hover {
+            background-color: #d0e8ff;
+            border-color: #4a90e2;
+        }
+        QPushButton:pressed {
+            background-color: #b8d7f5;
+        }
+    )");
+    
+    // Character Select button
+    QPushButton* btnChar = new QPushButton(" Character Select");
+    btnChar->setFixedHeight(50);
+    btnChar->setMaximumWidth(250);
+    
+    // Add dinosaur icon to button
+    QPixmap dinoIcon(":/images/images/Dino_Start.png");
+    dinoIcon = dinoIcon.scaled(30, 30, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    btnChar->setIcon(QIcon(dinoIcon));
+    btnChar->setIconSize(QSize(30, 30));
+    
+    btnChar->setStyleSheet(R"(
+        QPushButton {
+            background-color: #f5f5f5;
+            border: 3px solid #ccc;
+            border-radius: 10px;
+            font-family: 'Courier New';
+            font-size: 16px;
+            font-weight: bold;
+            padding: 10px 20px;
+            padding-left: 15px;
+            color: #000000;
+            text-align: left;
+        }
+        QPushButton:hover {
+            background-color: #d0e8ff;
+            border-color: #4a90e2;
+        }
+        QPushButton:pressed {
+            background-color: #b8d7f5;
+        }
+    )");
 
-    btnStart->setFixedHeight(40);
-    btnChar->setFixedHeight(40);
-
-    mlay->addStretch();
-    mlay->addWidget(new QLabel("<h1 style='font-family:Courier New;font-size:32px;'>Dino Game</h1>"));
-    mlay->addWidget(btnStart);
-    mlay->addWidget(btnChar);
-    mlay->addStretch();
+    // Center the buttons
+    QWidget* buttonContainer = new QWidget;
+    QVBoxLayout* buttonLayout = new QVBoxLayout(buttonContainer);
+    buttonLayout->setSpacing(15);
+    buttonLayout->addWidget(btnStart, 0, Qt::AlignCenter);
+    buttonLayout->addWidget(btnChar, 0, Qt::AlignCenter);
+    
+    mlay->addWidget(buttonContainer);
+    mlay->addStretch(3);
 
     connect(btnStart, &QPushButton::clicked, this, &MainWindow::startGame);
     connect(btnChar, &QPushButton::clicked, this, &MainWindow::openCharacterSelect);
@@ -34,8 +100,6 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     QVBoxLayout* clay = new QVBoxLayout(charPage);
     clay->setSpacing(15);
     clay->setContentsMargins(20, 20, 20, 20);
-
-    clay->addStretch(2);  // More space at top to push content higher
     
     QLabel* charTitle = new QLabel("<h2>Select Your Character</h2>");
     charTitle->setAlignment(Qt::AlignCenter);
@@ -100,7 +164,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     clay->addLayout(charLayout);
     
     // Back button 
-    QPushButton* backBtn = new QPushButton("← Back to Menu");
+    QPushButton* backBtn = new QPushButton("← Back");
     backBtn->setFixedHeight(40);
     backBtn->setMaximumWidth(180);
     backBtn->setStyleSheet(R"(
@@ -108,6 +172,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
             background-color: #f5f5f5;
             border: 3px solid #ccc;
             border-radius: 10px;
+            font-family: 'Courier New';
             font-size: 14px;
             font-weight: bold;
             padding: 8px 16px;
@@ -127,7 +192,6 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
         stack->setCurrentIndex(0);
     });
     
-    clay->addStretch(4);  // More space at bottom
     clay->addWidget(backBtn, 0, Qt::AlignCenter);
 
     // * 3. Game Page
@@ -145,6 +209,9 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     stack->setCurrentIndex(0);  // show menu
 
     setStyleSheet(R"(
+        QWidget {
+            background-color: white;
+        }
         QPushButton {
             font-size: 18px;
             padding: 8px 16px;
