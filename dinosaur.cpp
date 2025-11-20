@@ -578,6 +578,8 @@ void dinosaur::keyPressEvent(QKeyEvent* e) {
                 dino.setHeight(40);
                 dino.moveBottom(oldBottom);
             }
+        } else {
+            reset();
         }
     } else if (e->key() == Qt::Key_Down || e->key() == Qt::Key_S) {
         if (!gameOver) {
@@ -586,6 +588,8 @@ void dinosaur::keyPressEvent(QKeyEvent* e) {
             }
             // accelerate falling to ground
             if (!onGround) vy += 300.f;
+        } else {
+            emit exitToMenu();
         }
     } else if (e->key() == Qt::Key_R) {
         reset();
