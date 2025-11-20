@@ -38,5 +38,19 @@
         <file>images/SmallCactus3.png</file>
         <file>images/Game_Over_Restart.png</file>
         <file>images/Return_Home.png</file>
+        <file>images/Cowboy_Dead.png</file>
+        <file>images/Cowboy_Duck_1.png</file>
+        <file>images/Cowboy_Duck_2.png</file>
+        <file>images/Cowboy_Jump.png</file>
+        <file>images/Cowboy_Run_1.png</file>
+        <file>images/Cowboy_Run_2.png</file>
+        <file>images/Cowboy_Start.png</file>
+        <file>images/Pirate_Dead.png</file>
+        <file>images/Pirate_Duck_1.png</file>
+        <file>images/Pirate_Duck_2.png</file>
+        <file>images/Pirate_Jump.png</file>
+        <file>images/Pirate_Run_1.png</file>
+        <file>images/Pirate_Run_2.png</file>
+        <file>images/Pirate_Start.png</file>
     </qresource>
 </RCC>
