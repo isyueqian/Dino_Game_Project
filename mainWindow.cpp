@@ -110,7 +110,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     charLayout->setSpacing(20);
 
     // Create character preview cards
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < 5; ++i) {
         QWidget* charCard = new QWidget;
         charCard->setObjectName(QString("charCard_%1").arg(i));
         charCard->setCursor(Qt::PointingHandCursor);
@@ -134,9 +134,15 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
         } else if (i == 1) {
             preview.load(":/images/images/Hat_Start.png");
             charName = "Yellow Hat";
-        } else {
+        } else if (i == 2) {
             preview.load(":/images/images/Santa_Start.png");
             charName = "Santa";
+        } else if (i == 3) {
+            preview.load(":/images/images/Cowboy_Start.png");
+            charName = "Cowboy";
+        } else {
+            preview.load(":/images/images/Pirate_Start.png");
+            charName = "Pirate";
         }
 
         preview = preview.scaled(70, 70, Qt::KeepAspectRatio, Qt::SmoothTransformation);
@@ -155,8 +161,12 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
             charCard0 = charCard;
         else if (i == 1)
             charCard1 = charCard;
-        else
+        else if (i == 2)
             charCard2 = charCard;
+        else if (i == 3)
+            charCard3 = charCard;
+        else
+            charCard4 = charCard;
 
         // Make cards clickable
         charCard->installEventFilter(this);
@@ -272,6 +282,16 @@ void MainWindow::chooseSantaDino() {
     updateCharacterSelection();
 }
 
+void MainWindow::chooseCowboyDino() {
+    selectedSkin = 3;
+    updateCharacterSelection();
+}
+
+void MainWindow::choosePirateDino() {
+    selectedSkin = 4;
+    updateCharacterSelection();
+}
+
 void MainWindow::updateCharacterSelection() {
     // Update all cards to show selection state
     if (charCard0) {
@@ -286,6 +306,16 @@ void MainWindow::updateCharacterSelection() {
     }
     if (charCard2) {
         charCard2->setStyleSheet(selectedSkin == 2
+                                     ? "background-color: #d0e8ff; border: 4px solid #4a90e2; border-radius: 10px;"
+                                     : "background-color: #f5f5f5; border: 3px solid #ccc; border-radius: 10px;");
+    }
+    if (charCard3) {
+        charCard3->setStyleSheet(selectedSkin == 3
+                                     ? "background-color: #d0e8ff; border: 4px solid #4a90e2; border-radius: 10px;"
+                                     : "background-color: #f5f5f5; border: 3px solid #ccc; border-radius: 10px;");
+    }
+    if (charCard4) {
+        charCard4->setStyleSheet(selectedSkin == 4
                                      ? "background-color: #d0e8ff; border: 4px solid #4a90e2; border-radius: 10px;"
                                      : "background-color: #f5f5f5; border: 3px solid #ccc; border-radius: 10px;");
     }
@@ -304,6 +334,10 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event) {
                 chooseHatDino();
             else if (charIndex == 2)
                 chooseSantaDino();
+            else if (charIndex == 3)
+                chooseCowboyDino();
+            else if (charIndex == 4)
+                choosePirateDino();
 
             return true;
         }

@@ -18,6 +18,8 @@ class MainWindow : public QMainWindow {
     void chooseNormalDino();
     void chooseHatDino();
     void chooseSantaDino();
+    void chooseCowboyDino();
+    void choosePirateDino();
     void updateCharacterSelection();
 
    protected:
@@ -33,8 +35,10 @@ class MainWindow : public QMainWindow {
     QWidget* charCard0 = nullptr;
     QWidget* charCard1 = nullptr;
     QWidget* charCard2 = nullptr;
+    QWidget* charCard3 = nullptr;
+    QWidget* charCard4 = nullptr;
 
-    int selectedSkin = 0;  // 0 = normal, 1 = yellow hat, 2 = santa hat
+    int selectedSkin = 0;  // 0 = normal, 1 = yellow hat, 2 = santa, 3 = cowboy, 4 = pirate
 };
 
 #endif  // MAINWINDOW_H

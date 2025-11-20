@@ -123,7 +123,7 @@ void dinosaur::setSkin(int skin) {
         loadFrames(duckFrames, "Hat_Duck", 2, QSize(72, 28));
 
     } else if (skin == 2) {
-        // hat dino sprite
+        // santa dino sprite
         dinoStartSprite.load(":/images/images/Santa_Start.png");
         dinoJumpSprite.load(":/images/images/Santa_Jump.png");
         dinoDeadSprite.load(":/images/images/Santa_Dead.png");
@@ -134,6 +134,32 @@ void dinosaur::setSkin(int skin) {
         // Dinosaur animation
         loadFrames(runFrames, "Santa_Run", 2, QSize(38, 42));
         loadFrames(duckFrames, "Santa_Duck", 2, QSize(72, 28));
+
+    } else if (skin == 3) {
+        // cowboy dino sprite
+        dinoStartSprite.load(":/images/images/Cowboy_Start.png");
+        dinoJumpSprite.load(":/images/images/Cowboy_Jump.png");
+        dinoDeadSprite.load(":/images/images/Cowboy_Dead.png");
+        dinoStartSprite = dinoStartSprite.scaled(38, 42, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        dinoJumpSprite = dinoJumpSprite.scaled(38, 42, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        dinoDeadSprite = dinoDeadSprite.scaled(38, 42, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+        // Dinosaur animation
+        loadFrames(runFrames, "Cowboy_Run", 2, QSize(38, 42));
+        loadFrames(duckFrames, "Cowboy_Duck", 2, QSize(72, 28));
+
+    } else if (skin == 4) {
+        // pirate dino sprite
+        dinoStartSprite.load(":/images/images/Pirate_Start.png");
+        dinoJumpSprite.load(":/images/images/Pirate_Jump.png");
+        dinoDeadSprite.load(":/images/images/Pirate_Dead.png");
+        dinoStartSprite = dinoStartSprite.scaled(38, 42, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        dinoJumpSprite = dinoJumpSprite.scaled(38, 42, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        dinoDeadSprite = dinoDeadSprite.scaled(38, 42, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+        // Dinosaur animation
+        loadFrames(runFrames, "Pirate_Run", 2, QSize(38, 42));
+        loadFrames(duckFrames, "Pirate_Duck", 2, QSize(72, 28));
     }
 }
 
@@ -337,6 +363,7 @@ void dinosaur::updatePhysics(float dt) {
     spawnTimer -= dt;
     if (spawnTimer <= 0.f) {
         float obstacleType = QRandomGenerator::global()->bounded(1000) / 1000.f;
+
         bool isBird = (obstacleType >= 0.8f);
 
         if (isBird) {
