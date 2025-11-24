@@ -30,7 +30,7 @@ dinosaur::dinosaur(QWidget* parent) : QWidget(parent) {
     btnReturn = new QPushButton(this);
     btnRestart = new QPushButton(this);
 
-    QPixmap returnImg(":/images/images/Return_Home.png");
+    QPixmap returnImg(":/images/images/Back_Button.png");
     QPixmap scaledReturn = returnImg.scaled(48, 48, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
     QPixmap restartImg(":/images/images/Game_Over_Restart.png");
