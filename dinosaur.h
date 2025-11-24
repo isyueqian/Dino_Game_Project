@@ -54,6 +54,7 @@ class dinosaur : public QWidget {
     bool started = false;
 
     // sprites
+    QPixmap gameOverImage;
     QPixmap dinoStartSprite;
     QPixmap dinoJumpSprite;
     QPixmap dinoDeadSprite;

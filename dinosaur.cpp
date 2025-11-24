@@ -23,8 +23,10 @@ dinosaur::dinosaur(QWidget* parent) : QWidget(parent) {
 
     cloudSprite.load(":/images/images/Cloud.png");
     groundSprite.load(":/images/images/Ground.png");
+    gameOverImage.load(":/images/images/Game_Over.png");
     cloudSprite = cloudSprite.scaled(60, 60, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     groundSprite = groundSprite.scaledToHeight(20, Qt::SmoothTransformation);
+    gameOverImage = gameOverImage.scaled(200, 60, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
     // Setup control buttons
     btnReturn = new QPushButton(this);
@@ -33,16 +35,16 @@ dinosaur::dinosaur(QWidget* parent) : QWidget(parent) {
     QPixmap returnImg(":/images/images/Back_Button.png");
     QPixmap scaledReturn = returnImg.scaled(48, 48, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
-    QPixmap restartImg(":/images/images/Game_Over_Restart.png");
-    QPixmap scaledRestart = restartImg.scaled(48 * 5, 48 * 4, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    QPixmap restartImg(":/images/images/Restart.png");
+    QPixmap scaledRestart = restartImg.scaled(48, 48, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
     btnReturn->setIcon(scaledReturn);
     btnReturn->setIconSize(QSize(48, 48));
     btnReturn->setFixedSize(48, 48);
 
     btnRestart->setIcon(scaledRestart);
-    btnRestart->setIconSize(QSize(48 * 5, 48 * 4));
-    btnRestart->setFixedSize(48 * 5, 48 * 4);
+    btnRestart->setIconSize(QSize(48, 48));
+    btnRestart->setFixedSize(48, 48);
 
     btnReturn->move(10, 10);
 
@@ -170,7 +172,7 @@ void dinosaur::resizeEvent(QResizeEvent* event) {
 
     int restartW = btnRestart->width();
     int restartH = btnRestart->height();
-    btnRestart->move((width() - restartW) / 2, (height() - restartH) / 2 - 30);
+    btnRestart->move((width() - restartW) / 2, (height() - restartH) / 2 + 35);
 }
 
 void dinosaur::reset() {
@@ -551,7 +553,14 @@ void dinosaur::paintEvent(QPaintEvent*) {
     } else if (gameOver) {
         QFont gameOverFont("Menlo", 15, QFont::Bold);
         p.setFont(gameOverFont);
-        p.drawText(width() / 2 - 150, height() / 2, QStringLiteral("Click Above or Press R to restart"));
+        p.drawText(width() / 2 - 150, height() / 2, QStringLiteral("Click Below or Press R to restart"));
+
+        int imgW = gameOverImage.width();
+        int imgH = gameOverImage.height();
+        int x = (width() - imgW) / 2;
+        int y = (height() - imgH) / 2 - 30;
+
+        p.drawPixmap(x, y, gameOverImage);
     }
 }
 
