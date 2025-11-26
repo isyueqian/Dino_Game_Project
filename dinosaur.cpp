@@ -1,9 +1,11 @@
 #include "dinosaur.h"
+#include <QApplication>
 #include <QDebug>
 #include <QKeyEvent>
 #include <QPainter>
 #include <QRandomGenerator>
 #include <cmath>
+#include "gpio_keys.h"
 
 void loadFrames(QVector<QPixmap>& vec, const QString& baseName, int count, const QSize& targetSize) {
     for (int i = 0; i < count; ++i) {
@@ -20,6 +22,28 @@ dinosaur::dinosaur(QWidget* parent) : QWidget(parent) {
 
     setWindowTitle("Dinosaur Game (Qt Widget)");
     setFixedSize(480, 272);
+
+    GpioKeys* gpio = new GpioKeys(this);
+
+    connect(gpio, &GpioKeys::keyUpPressed, this, [this]() {
+        QKeyEvent event(QEvent::KeyPress, Qt::Key_Up, Qt::NoModifier);
+        QApplication::sendEvent(this, &event);
+    });
+
+    connect(gpio, &GpioKeys::keyUpReleased, this, [this]() {
+        QKeyEvent event(QEvent::KeyRelease, Qt::Key_Up, Qt::NoModifier);
+        QApplication::sendEvent(this, &event);
+    });
+
+    connect(gpio, &GpioKeys::keyDownPressed, this, [this]() {
+        QKeyEvent event(QEvent::KeyPress, Qt::Key_Down, Qt::NoModifier);
+        QApplication::sendEvent(this, &event);
+    });
+
+    connect(gpio, &GpioKeys::keyDownReleased, this, [this]() {
+        QKeyEvent event(QEvent::KeyRelease, Qt::Key_Down, Qt::NoModifier);
+        QApplication::sendEvent(this, &event);
+    });
 
     cloudSprite.load(":/images/images/Cloud.png");
     groundSprite.load(":/images/images/Ground.png");
@@ -78,7 +102,7 @@ dinosaur::dinosaur(QWidget* parent) : QWidget(parent) {
         QPixmap smallCactus(QString(":/images/images/SmallCactus%1.png").arg(i));
         smallCactusSprites.push_back(smallCactus.scaled(60, 25, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     }
-    
+
 #ifdef SOUND
     sJump.setSource(QUrl("qrc:/sounds/sounds/jump.wav"));
     sJump.setVolume(0.25f);
@@ -261,6 +285,9 @@ void dinosaur::updateDinoState() {
 }
 
 void dinosaur::updateAnimation(float dt) {
+    if (runFrames.isEmpty() || duckFrames.isEmpty()) {
+        return;
+    }
     animTimer += dt;
     if (animTimer < animFrameDuration) return;
     animTimer -= animFrameDuration;

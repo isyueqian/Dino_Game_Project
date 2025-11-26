@@ -1,5 +1,5 @@
 QT       += core gui
-QT       += multimedia
+#QT       += multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -12,11 +12,13 @@ CONFIG += c++17
 SOURCES += \
     main.cpp \
     dinosaur.cpp \
-    mainWindow.cpp
+    mainWindow.cpp \
+    gpio_keys.cpp
 
 HEADERS += \
     dinosaur.h \
-    mainWindow.h
+    mainWindow.h \
+    gpio_keys.h
 
 FORMS += \
     dinosaur.ui

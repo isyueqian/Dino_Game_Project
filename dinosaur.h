@@ -9,7 +9,7 @@
 #include <QVector>
 #include <QWidget>
 
-#define SOUND
+// #define SOUND
 
 #ifdef SOUND
 #include <QSoundEffect>
