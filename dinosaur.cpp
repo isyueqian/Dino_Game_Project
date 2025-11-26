@@ -567,12 +567,12 @@ void dinosaur::paintEvent(QPaintEvent*) {
     QFont uiFont("Menlo", 15, QFont::Normal);
     p.setFont(uiFont);
     if (!started && !gameOver) {
-        p.drawText(width() / 2 - 130, height() / 2 - 12, QStringLiteral("Press SPACE/UP/W to start"));
-        p.drawText(width() / 2 - 80, height() / 2 + 17, QStringLiteral("DOWN/S to duck"));
+        p.drawText(width() / 2 - 150, height() / 2 - 12, QStringLiteral("Press SPACE/UP/W to start"));
+        p.drawText(width() / 2 - 90, height() / 2 + 17, QStringLiteral("DOWN/S to duck"));
     } else if (gameOver) {
         QFont gameOverFont("Menlo", 15, QFont::Normal);
         p.setFont(gameOverFont);
-        p.drawText(width() / 2 - 80, height() / 2, QStringLiteral("Press R to restart"));
+        p.drawText(width() / 2 - 100, height() / 2, QStringLiteral("Press R to restart"));
 
         int imgW = gameOverImage.width();
         int imgH = gameOverImage.height();
