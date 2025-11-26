@@ -19,7 +19,7 @@ dinosaur::dinosaur(QWidget* parent) : QWidget(parent) {
     setFocusPolicy(Qt::StrongFocus);
 
     setWindowTitle("Dinosaur Game (Qt Widget)");
-    setFixedSize(640, 240);
+    setFixedSize(480, 272);
 
     cloudSprite.load(":/images/images/Cloud.png");
     groundSprite.load(":/images/images/Ground.png");
