@@ -572,7 +572,7 @@ void dinosaur::paintEvent(QPaintEvent*) {
     } else if (gameOver) {
         QFont gameOverFont("Menlo", 15, QFont::Normal);
         p.setFont(gameOverFont);
-        p.drawText(width() / 2 - 150, height() / 2, QStringLiteral("Press R to restart"));
+        p.drawText(width() / 2 - 80, height() / 2, QStringLiteral("Press R to restart"));
 
         int imgW = gameOverImage.width();
         int imgH = gameOverImage.height();
