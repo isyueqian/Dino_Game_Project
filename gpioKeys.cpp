@@ -36,12 +36,12 @@ void GpioKeys::handleUp() {
     lseek(fdUp, 0, SEEK_SET);
     if (read(fdUp, &buf, 1) <= 0) return;
 
-    // 0 → 1 = 按下
+    // 0 -> 1 Press
     if (lastUpValue == '0' && buf == '1') {
         emit keyUpPressed();
     }
 
-    // 1 → 0 = 松开
+    // 1 -> 0 Release
     if (lastUpValue == '1' && buf == '0') {
         emit keyUpReleased();
     }
@@ -54,12 +54,12 @@ void GpioKeys::handleDown() {
     lseek(fdDown, 0, SEEK_SET);
     if (read(fdDown, &buf, 1) <= 0) return;
 
-    // 0 → 1 = 按下
+    // 0 -> 1 Press
     if (lastDownValue == '0' && buf == '1') {
         emit keyDownPressed();
     }
 
-    // 1 → 0 = 松开
+    // 1 -> 0 Release
     if (lastDownValue == '1' && buf == '0') {
         emit keyDownReleased();
     }
