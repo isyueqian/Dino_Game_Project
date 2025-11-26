@@ -1,4 +1,4 @@
-#include "gpio_keys.h"
+#include "gpioKeys.h"
 #include <QDebug>
 #include <unistd.h>
 #include <fcntl.h>

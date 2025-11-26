@@ -1,5 +1,5 @@
-#ifndef GPIO_KEYS_H
-#define GPIO_KEYS_H
+#ifndef GPIOKEYS_H
+#define GPIOKEYS_H
 
 #include <QObject>
 #include <QSocketNotifier>

@@ -5,7 +5,7 @@
 #include <QPainter>
 #include <QRandomGenerator>
 #include <cmath>
-#include "gpio_keys.h"
+#include "gpioKeys.h"
 
 void loadFrames(QVector<QPixmap>& vec, const QString& baseName, int count, const QSize& targetSize) {
     for (int i = 0; i < count; ++i) {

@@ -10,15 +10,15 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    gpioKeys.cpp \
     main.cpp \
     dinosaur.cpp \
-    mainWindow.cpp \
-    gpio_keys.cpp
+    mainWindow.cpp
 
 HEADERS += \
     dinosaur.h \
-    mainWindow.h \
-    gpio_keys.h
+    gpioKeys.h \
+    mainWindow.h
 
 FORMS += \
     dinosaur.ui
