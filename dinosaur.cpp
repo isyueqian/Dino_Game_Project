@@ -78,14 +78,15 @@ dinosaur::dinosaur(QWidget* parent) : QWidget(parent) {
         QPixmap smallCactus(QString(":/images/images/SmallCactus%1.png").arg(i));
         smallCactusSprites.push_back(smallCactus.scaled(60, 25, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     }
-
-    // Sound effect
+    
+#ifdef SOUND
     sJump.setSource(QUrl("qrc:/sounds/sounds/jump.wav"));
     sJump.setVolume(0.25f);
     sHit.setSource(QUrl("qrc:/sounds/sounds/hit.wav"));
     sHit.setVolume(0.35f);
     sPoint.setSource(QUrl("qrc:/sounds/sounds/point.wav"));
     sPoint.setVolume(0.20f);
+#endif
 
     reset();
 
@@ -299,9 +300,11 @@ void dinosaur::updatePhysics(float dt) {
     // play sound and increase speed when score increases by 100
     if (newScore / 100 > score / 100) {
         speed = std::min(maxSpeed, speed + 10.f);
+#ifdef SOUND
         if (sPoint.isLoaded()) {
             sPoint.play();
         }
+#endif
     }
     score = newScore;
 
@@ -395,12 +398,26 @@ void dinosaur::updatePhysics(float dt) {
 }
 
 bool dinosaur::checkCollision() const {
+    const int MIN_OVERLAP = 30;
+
     for (const auto& c : cactus) {
-        if (dino.intersects(c)) return true;
+        QRect inter = dino.intersected(c);
+        if (inter.width() > 0 && inter.height() > 0) {
+            if (inter.width() * inter.height() > MIN_OVERLAP) {
+                return true;
+            }
+        }
     }
+
     for (const auto& b : birds) {
-        if (dino.intersects(b)) return true;
+        QRect inter = dino.intersected(b);
+        if (inter.width() > 0 && inter.height() > 0) {
+            if (inter.width() * inter.height() > MIN_OVERLAP) {
+                return true;
+            }
+        }
     }
+
     return false;
 }
 
@@ -412,9 +429,11 @@ void dinosaur::tick() {
             gameOver = true;
             btnRestart->show();
             currentState = DEAD;
+#ifdef SOUND
             if (sHit.isLoaded()) {
                 sHit.play();
             }
+#endif
             // Update high score if current score is higher
             if (score > highScore) {
                 highScore = score;
@@ -524,7 +543,7 @@ void dinosaur::paintEvent(QPaintEvent*) {
     }
 
     // scores
-    QFont gameFont("Menlo", 16, QFont::Bold);
+    QFont gameFont("Menlo", 15, QFont::Bold);
     p.setFont(gameFont);
     p.setPen(isNight ? Qt::white : QColor(83, 83, 83));  // Dark gray
     p.setBrush(Qt::NoBrush);
@@ -548,12 +567,12 @@ void dinosaur::paintEvent(QPaintEvent*) {
     QFont uiFont("Menlo", 15, QFont::Normal);
     p.setFont(uiFont);
     if (!started && !gameOver) {
-        p.drawText(width() / 2 - 130, height() / 2 - 12, QStringLiteral("Press SPACE / UP / W to start"));
-        p.drawText(width() / 2 - 80, height() / 2 + 17, QStringLiteral("DOWN / S to duck"));
+        p.drawText(width() / 2 - 130, height() / 2 - 12, QStringLiteral("Press SPACE/UP/W to start"));
+        p.drawText(width() / 2 - 80, height() / 2 + 17, QStringLiteral("DOWN/S to duck"));
     } else if (gameOver) {
-        QFont gameOverFont("Menlo", 15, QFont::Bold);
+        QFont gameOverFont("Menlo", 15, QFont::Normal);
         p.setFont(gameOverFont);
-        p.drawText(width() / 2 - 150, height() / 2, QStringLiteral("Click Below or Press R to restart"));
+        p.drawText(width() / 2 - 150, height() / 2, QStringLiteral("Press R to restart"));
 
         int imgW = gameOverImage.width();
         int imgH = gameOverImage.height();
@@ -578,9 +597,11 @@ void dinosaur::keyPressEvent(QKeyEvent* e) {
             if (onGround) {
                 onGround = false;
                 vy = jumpV;
+#ifdef SOUND
                 if (sJump.isLoaded()) {
                     sJump.play();
                 }
+#endif
                 currentState = JUMP;
 
                 int oldBottom = dino.bottom();

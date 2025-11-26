@@ -5,10 +5,15 @@
 #include <QPixmap>
 #include <QPushButton>
 #include <QRect>
-#include <QSoundEffect>
 #include <QTimer>
 #include <QVector>
 #include <QWidget>
+
+#define SOUND
+
+#ifdef SOUND
+#include <QSoundEffect>
+#endif
 
 class dinosaur : public QWidget {
     Q_OBJECT
@@ -115,10 +120,11 @@ class dinosaur : public QWidget {
     float groundOffset = 0.f;
     float groundPatternSpacing = 20.f;
 
-    // audio
+#ifdef SOUND
     QSoundEffect sJump;
     QSoundEffect sHit;
     QSoundEffect sPoint;
+#endif
 };
 
 #endif  // DINOSAUR_H
