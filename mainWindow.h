@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "scoreManager.h"
 #include <QMainWindow>
 #include <QPushButton>
 #include <QStackedWidget>
@@ -13,8 +14,10 @@ public:
   MainWindow(QWidget *parent = nullptr);
 
 private slots:
+  void handleGameOver(int skin, int score);
   void startGame();
   void openCharacterSelect();
+  void openLeaderboard();
   void chooseNormalDino();
   void chooseHatDino();
   void chooseSantaDino();
@@ -29,7 +32,10 @@ private:
   QStackedWidget *stack;
   QWidget *menuPage;
   QWidget *charPage;
+  QWidget *leaderboardPage;
   dinosaur *gamePage;
+
+  ScoreManager *scoreManager;
 
   // Character selection cards
   QWidget *charCard0 = nullptr;

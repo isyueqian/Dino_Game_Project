@@ -32,6 +32,7 @@ private slots:
 
 signals:
   void exitToMenu();
+  void gameOverSignal(int skin, int score);
 
 private:
   enum DinoState { RUN, DUCK, START, JUMP, DEAD };
@@ -119,6 +120,8 @@ private:
   // ground pattern
   float groundOffset = 0.f;
   float groundPatternSpacing = 20.f;
+
+  int currentSkinIndex = 0;
 
 #ifdef SOUND
   QSoundEffect sJump;

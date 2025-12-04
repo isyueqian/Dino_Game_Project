@@ -53,5 +53,6 @@
         <file>images/Pirate_Run_2.png</file>
         <file>images/Pirate_Start.png</file>
         <file>images/Back_Button.png</file>
+        <file>images/Trophy.png</file>
     </qresource>
 </RCC>

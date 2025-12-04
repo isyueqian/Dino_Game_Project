@@ -57,7 +57,7 @@ dinosaur::dinosaur(QWidget *parent) : QWidget(parent) {
   gameOverImage = gameOverImage.scaled(200, 60, Qt::KeepAspectRatio,
                                        Qt::SmoothTransformation);
 
-  // Setup control buttons
+  // Control buttons
   btnReturn = new QPushButton(this);
   btnRestart = new QPushButton(this);
 
@@ -95,7 +95,7 @@ dinosaur::dinosaur(QWidget *parent) : QWidget(parent) {
   btnReturn->setStyleSheet("border: none; background: transparent;");
   btnRestart->setStyleSheet("border: none; background: transparent;");
 
-  // Load bird sprites
+  // Bird sprites
   birdSprite1.load(":/images/images/Bird1.png");
   birdSprite2.load(":/images/images/Bird2.png");
   birdSprite1 =
@@ -103,7 +103,7 @@ dinosaur::dinosaur(QWidget *parent) : QWidget(parent) {
   birdSprite2 =
       birdSprite2.scaled(42, 27, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
-  // Load cactus sprites
+  // Cactus sprites
   for (int i = 1; i <= 3; ++i) {
     QPixmap largeCactus(QString(":/images/images/LargeCactus%1.png").arg(i));
     largeCactusSprites.push_back(largeCactus.scaled(60, 35, Qt::KeepAspectRatio,
@@ -132,10 +132,11 @@ dinosaur::dinosaur(QWidget *parent) : QWidget(parent) {
 }
 
 void dinosaur::setSkin(int skin) {
+  currentSkinIndex = skin;
   runFrames.clear();
   duckFrames.clear();
   if (skin == 0) {
-    // normal dino sprite
+    // Normal
     dinoStartSprite.load(":/images/images/Dino_Start.png");
     dinoJumpSprite.load(":/images/images/Dino_Jump.png");
     dinoDeadSprite.load(":/images/images/Dino_Dead.png");
@@ -146,12 +147,11 @@ void dinosaur::setSkin(int skin) {
     dinoDeadSprite = dinoDeadSprite.scaled(36, 40, Qt::KeepAspectRatio,
                                            Qt::SmoothTransformation);
 
-    // Dinosaur animation
     loadFrames(runFrames, "Dino_Run", 2, QSize(36, 40));
     loadFrames(duckFrames, "Dino_Duck", 2, QSize(72, 25));
 
   } else if (skin == 1) {
-    // hat dino sprite
+    // Hat
     dinoStartSprite.load(":/images/images/Hat_Start.png");
     dinoJumpSprite.load(":/images/images/Hat_Jump.png");
     dinoDeadSprite.load(":/images/images/Hat_Dead.png");
@@ -162,12 +162,11 @@ void dinosaur::setSkin(int skin) {
     dinoDeadSprite = dinoDeadSprite.scaled(38, 42, Qt::KeepAspectRatio,
                                            Qt::SmoothTransformation);
 
-    // Dinosaur animation
     loadFrames(runFrames, "Hat_Run", 2, QSize(38, 42));
     loadFrames(duckFrames, "Hat_Duck", 2, QSize(72, 28));
 
   } else if (skin == 2) {
-    // santa dino sprite
+    // Santa
     dinoStartSprite.load(":/images/images/Santa_Start.png");
     dinoJumpSprite.load(":/images/images/Santa_Jump.png");
     dinoDeadSprite.load(":/images/images/Santa_Dead.png");
@@ -178,12 +177,11 @@ void dinosaur::setSkin(int skin) {
     dinoDeadSprite = dinoDeadSprite.scaled(38, 42, Qt::KeepAspectRatio,
                                            Qt::SmoothTransformation);
 
-    // Dinosaur animation
     loadFrames(runFrames, "Santa_Run", 2, QSize(38, 42));
     loadFrames(duckFrames, "Santa_Duck", 2, QSize(72, 28));
 
   } else if (skin == 3) {
-    // cowboy dino sprite
+    // Cowboy
     dinoStartSprite.load(":/images/images/Cowboy_Start.png");
     dinoJumpSprite.load(":/images/images/Cowboy_Jump.png");
     dinoDeadSprite.load(":/images/images/Cowboy_Dead.png");
@@ -194,12 +192,11 @@ void dinosaur::setSkin(int skin) {
     dinoDeadSprite = dinoDeadSprite.scaled(38, 42, Qt::KeepAspectRatio,
                                            Qt::SmoothTransformation);
 
-    // Dinosaur animation
     loadFrames(runFrames, "Cowboy_Run", 2, QSize(38, 42));
     loadFrames(duckFrames, "Cowboy_Duck", 2, QSize(72, 28));
 
   } else if (skin == 4) {
-    // pirate dino sprite
+    // Pirate
     dinoStartSprite.load(":/images/images/Pirate_Start.png");
     dinoJumpSprite.load(":/images/images/Pirate_Jump.png");
     dinoDeadSprite.load(":/images/images/Pirate_Dead.png");
@@ -210,7 +207,6 @@ void dinosaur::setSkin(int skin) {
     dinoDeadSprite = dinoDeadSprite.scaled(38, 42, Qt::KeepAspectRatio,
                                            Qt::SmoothTransformation);
 
-    // Dinosaur animation
     loadFrames(runFrames, "Pirate_Run", 2, QSize(38, 42));
     loadFrames(duckFrames, "Pirate_Duck", 2, QSize(72, 28));
   }
@@ -501,6 +497,7 @@ void dinosaur::tick() {
       if (score > highScore) {
         highScore = score;
       }
+      emit gameOverSignal(currentSkinIndex, score);
     }
   }
   update();

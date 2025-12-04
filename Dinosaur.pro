@@ -13,12 +13,14 @@ SOURCES += \
     gpioKeys.cpp \
     main.cpp \
     dinosaur.cpp \
-    mainWindow.cpp
+    mainWindow.cpp \
+    scoreManager.cpp
 
 HEADERS += \
     dinosaur.h \
     gpioKeys.h \
-    mainWindow.h
+    mainWindow.h \
+    scoreManager.h
 
 FORMS += \
     dinosaur.ui
