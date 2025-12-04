@@ -8,6 +8,10 @@ ScoreManager::ScoreManager() { loadScores(); }
 
 void ScoreManager::loadScores() {
   QFile file(filename);
+  if (!file.exists()) {
+    return; // File doesn't exist yet, skip loading
+  }
+
   if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
     qDebug() << "Could not open scores file for reading:" << filename;
     return;

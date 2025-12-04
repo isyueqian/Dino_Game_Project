@@ -18,8 +18,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
   // Menu Page
   menuPage = new QWidget;
   QVBoxLayout *mlay = new QVBoxLayout(menuPage);
-  mlay->setSpacing(20);
-  mlay->setContentsMargins(40, 20, 40, 40);
+  mlay->setSpacing(15);
+  mlay->setContentsMargins(40, 20, 40, 25);
 
   // Title
   QLabel *title = new QLabel(
@@ -27,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
   title->setAlignment(Qt::AlignCenter);
   mlay->addWidget(title);
 
-  mlay->addSpacing(-5);
+  mlay->addSpacing(-15);
 
   // Start button
   QPushButton *btnStart = new QPushButton("▶ Play");
